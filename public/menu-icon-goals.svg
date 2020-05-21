@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
+    <title>menu-icon-goals</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="menu-icon-goals" stroke="#FFFFFF" stroke-width="1.75">
+            <path d="M23.9579362,16.8254093 C23.9857491,16.5540607 24,16.2786946 24,16 C24,11.581722 20.418278,8 16,8 C11.581722,8 8,11.581722 8,16 C8,20.418278 11.581722,24 16,24 C16.2786946,24 16.5540607,23.9857491 16.8254093,23.9579362" id="big-circle"></path>
+            <path d="M19.9922931,15.7496524 L19.9922931,15.7496524 C19.8630729,13.657134 18.1250587,12 16,12 L16,12 L16,12 C13.790861,12 12,13.790861 12,16 L12,16 L12,16 C12,18.1250587 13.657134,19.8630729 15.7496524,19.9922931" id="small-circle"></path>
+            <path d="M16,16 L20,20" id="arrow"></path>
+            <polygon id="arrow-feather" points="20 23 23 26 23 23 26 23 23 20 19.5 19.5"></polygon>
+        </g>
+    </g>
+</svg>

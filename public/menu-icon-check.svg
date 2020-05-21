@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 45.1 (43504) - http://www.bohemiancoding.com/sketch -->
+    <title>menu-icon-check</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M13,9 L22,9 L24,9 L24,9 L24,9 C22.8954305,9 22,9.8954305 22,11 L22,12 L22,24 L19,23 L16,24 L13,23 L10,24 L10,12 L10,12 L10,12 C10,10.3431458 11.3431458,9 13,9 Z" id="Rectangle-4" stroke="#FFFFFF" stroke-width="1.75"></path>
+        <path d="M22,9 L24,9 C25.1045695,9 26,9.8954305 26,11 C26,11.7368684 25.6015024,12.3806628 25.008258,12.7276322" id="Rectangle-5" stroke="#FFFFFF" stroke-width="1.75"></path>
+        <path d="M13.5,13 L18.5,13" id="Path-3" stroke="#FFFFFF" stroke-width="1.75"></path>
+        <path d="M13.5,19 L18.5,19" id="Path-3" stroke="#FFFFFF" stroke-width="1.75"></path>
+        <path d="M17.5,16 L18.5,16" id="Path-3" stroke="#FFFFFF" stroke-width="1.75"></path>
+        <path d="M13.5,16 L14.5,16" id="Path-3" stroke="#FFFFFF" stroke-width="1.75"></path>
+    </g>
+</svg>

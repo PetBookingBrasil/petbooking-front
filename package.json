@@ -1,0 +1,24 @@
+{
+  "name": "petbooking-front",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@material-ui/core": "^4.9.14",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.53",
+    "next": "9.4.2",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "react-text-mask": "^5.4.3",
+    "styled-components": "^5.1.0",
+    "text-mask-addons": "^3.8.0"
+  },
+  "devDependencies": {
+    "next-images": "^1.4.0"
+  }
+}

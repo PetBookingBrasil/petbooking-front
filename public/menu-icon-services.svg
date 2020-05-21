@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 45.1 (43504) - http://www.bohemiancoding.com/sketch -->
+    <title>menu-icon-services</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linejoin="round" stroke-linecap="round">
+        <ellipse id="Oval" stroke="#FFFFFF" stroke-width="1.75" transform="translate(19.500000, 20.500000) scale(-1, 1) rotate(20.000000) translate(-19.500000, -20.500000) " cx="19.5" cy="20.5" rx="1.5" ry="2.5"></ellipse>
+        <path d="M12,9 L15.3403574,14.9727446 L15.3403574,14.9727446 C16.2387089,16.579047 17.0251278,18.2454354 17.6940084,19.960032 L18.3000031,21.5134277" id="Path-4" stroke="#FFFFFF" stroke-width="1.75"></path>
+        <ellipse id="Oval" stroke="#FFFFFF" stroke-width="1.75" transform="translate(12.500000, 20.500000) rotate(20.000000) translate(-12.500000, -20.500000) " cx="12.5" cy="20.5" rx="1.5" ry="2.5"></ellipse>
+        <path d="M13.6999969,9 L17.0403544,14.9727446 L17.0403544,14.9727446 C17.9387059,16.579047 18.7251247,18.2454354 19.3940054,19.960032 L20,21.5134277" id="Path-4" stroke="#FFFFFF" stroke-width="1.75" transform="translate(16.849998, 15.256714) scale(-1, 1) translate(-16.849998, -15.256714) "></path>
+    </g>
+</svg>
