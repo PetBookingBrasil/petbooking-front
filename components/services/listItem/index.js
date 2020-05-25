@@ -1,51 +1,56 @@
-import React from 'react';
+import React from "react";
 
-import { Grid, Typography, Tooltip } from '@material-ui/core';
-import { Edit, Delete, AttachMoney, Schedule, ErrorOutline } from '@material-ui/icons';
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import Tooltip from "@material-ui/core/Tooltip";
+import Edit from "@material-ui/icons/Edit";
+import Delete from "@material-ui/icons/Delete";
+import AttachMoney from "@material-ui/icons/AttachMoney";
+import Schedule from "@material-ui/icons/Schedule";
+
+import { Component, SkillBtn, ImageWrapper, Initials } from "./styles";
 
 export default function ListItem(props) {
   return (
-    <Grid
-      item
-      md={12}
-      className={`sns-list-item pt-3 pb-3 px-2
-        ${!!props.subItem ? 'sns-service-border ml-2' : ''} 
-      `}
-    >
+    <Component item md={12} isService={!!props.subItem}>
       <Grid container spacing={3} alignItems="center">
         <Grid item md={10}>
-          {!!!props.subItem && <Typography variant="body1">{props.data.name}</Typography>}
+          {!!!props.subItem && (
+            <Typography variant="body1">{props.data.name}</Typography>
+          )}
 
           {!!props.subItem && (
             <Grid container alignItems="center">
               <Grid item md={6}>
                 {props.data.name}
               </Grid>
-              <Grid item md={2} className="d-flex align-items-center">
+              <Grid item md={2} className="d-flex align-center">
                 <React.Fragment>
-                  <AttachMoney className="mr-2" />
+                  <AttachMoney className="margin-r-2" />
                   <Typography variant="caption">
-                    {props.data.price_formatted !== 'R$ 0,00'
+                    {props.data.price_formatted !== "R$ 0,00"
                       ? props.data.price_formatted
-                      : 'não configurado'}
+                      : "não configurado"}
                   </Typography>
                 </React.Fragment>
               </Grid>
-              <Grid item md={2} className="d-flex align-items-center">
+              <Grid item md={2} className="d-flex align-center">
                 <React.Fragment>
-                  <Schedule className="mr-2" />
+                  <Schedule className="margin-r-2" />
                   <Typography variant="caption">
-                    {props.data.duration_formatted !== 'zero'
+                    {props.data.duration_formatted !== "zero"
                       ? props.data.duration_formatted
-                      : 'não configurado'}
+                      : "não configurado"}
                   </Typography>
                 </React.Fragment>
               </Grid>
-              <Grid item md={2} className="d-flex align-items-center o-auto">
+              <Grid item md={2} className="d-flex align-center o-auto">
                 {!!props.data.employments && !!!props.data.employments.length && (
-                  <div className="sns-no-skills" onClick={() => props.setFirstEmployee()}>
-                    <Typography variant="caption">configurar habilidades</Typography>
-                  </div>
+                  <SkillBtn onClick={() => props.setFirstEmployee()}>
+                    <Typography variant="caption">
+                      configurar habilidades
+                    </Typography>
+                  </SkillBtn>
                 )}
                 {!!props.data.employments &&
                   !!props.data.employments.length &&
@@ -55,15 +60,15 @@ export default function ListItem(props) {
                       key={item.id}
                       onClick={() => props.setEmployee(item)}
                     >
-                      <div className="sns-image mr-2">
-                        {item.avatar_url.includes('fallback') ? (
-                          <div className="sns-avatar-default">
+                      <ImageWrapper className="margin-r-2">
+                        {item.avatar_url.includes("fallback") ? (
+                          <Initials>
                             <span>{item.initials}</span>
-                          </div>
+                          </Initials>
                         ) : (
                           <img src={item.avatar_url}></img>
                         )}
-                      </div>
+                      </ImageWrapper>
                     </Tooltip>
                   ))}
               </Grid>
@@ -75,19 +80,19 @@ export default function ListItem(props) {
             <Grid
               item
               md={1}
-              className="d-flex align-items-center sns-link"
+              className="d-flex align-center hover"
               onClick={() => props.editItem(props.data)}
             >
-              <Edit className="mr-1" />
+              <Edit className="margin-r-1" />
               <Typography variant="caption">Editar</Typography>
             </Grid>
-            <Grid item md={1} className="d-flex align-items-center sns-link">
-              <Delete className="mr-1" />
+            <Grid item md={1} className="d-flex align-center hover">
+              <Delete className="margin-r-1" />
               <Typography variant="caption">Remover</Typography>
             </Grid>
           </React.Fragment>
         )}
       </Grid>
-    </Grid>
+    </Component>
   );
 }

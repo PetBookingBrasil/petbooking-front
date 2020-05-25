@@ -9,7 +9,7 @@ const GlobalStyle = createGlobalStyle`
       @media (max-width: 768px) {
         font-size: 14px;
       }
-      font-family: Nunito Sans !important;
+      font-family: Roboto !important;
     }
 
 
@@ -33,8 +33,8 @@ const GlobalStyle = createGlobalStyle`
   }
 
   .MuiButton-containedSecondary {
-    background-color: ${Colors.lightGray} !important;
-    color: ${Colors.gray} !important;
+    background-color: ${Colors.backgroundGray} !important;
+    color: ${Colors.text} !important;
   }
 
   .MuiTypography-subtitle1 {
@@ -65,153 +65,19 @@ const GlobalStyle = createGlobalStyle`
     opacity: 0.6;
   }
 
-  .sns-with-skill {
-    border-left: 2px solid ${Colors.primaryColor} !important;
-  }
-
-  .sns-no-skills {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0.5em;
-    width: 100%;
-    border-radius: 4px;
-    font-size: 0.6em;
-    background-color: ${Colors.lightGray};
+  .hover {
     &:hover {
       cursor: pointer;
     }
   }
 
-  .sns-service-border {
-    border-left: 1px solid ${Colors.primaryColor} !important;
-  }
-
-  .sns-employee {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    flex-direction: column;
-    margin-right: 1em;
-
-    &:hover {
-      cursor: pointer;
-    }
-
-    .MuiTypography-caption {
-      margin-top: 1em;
-      text-align: center;
-      color: ${Colors.primaryColor};
-      font-size: 0.6em !important;
-      width: 10em;
-    }
-  }
-
-  .sns-image {
-    position: relative;
-
-    .sns-skills-count {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: absolute;
-      top: -1em;
-      right: -1em;
-      width: 1.2em;
-      height: 1.2em;
-      background-color: ${Colors.primaryColor};
-      padding: 1em;
-      color: ${Colors.white};
-      border-radius: 5px;
-      font-size: 0.5em;
-    }
-
-    img {
-      width: 2em;
-      height: 2em;
-      object-fit: cover;
-      border-radius: 4px;
-    }
-  }
-
-  .sns-avatar-default {
-    width: 2em;
-    height: 2em;
-    object-fit: cover;
-    border-radius: 4px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: $v2-avatar-gray;
-    color: ${Colors.white};
-    font-weight: bold;
-  }
-
-  .sns-list-item {
-    border-left: 2px solid transparent;
-    border-bottom: 1px dotted $v2-border-gray;
-  }
-
-  .sns-dialog {
-    .MuiDialogTitle-root {
-      padding: 0 1em !important;
-    }
-    .MuiDialog-paper {
-      width: 70% !important;
-      background-color: $v2-offwhite;
-    }
-    .MuiDialogContent-root,
-    .MuiDialogActions-root {
-      padding: 3em !important;
-    }
-    .sns-dialog-header {
-      background-color: white !important;
-    }
-  }
-
-  .sns-link {
-    &:hover {
-      cursor: pointer;
-    }
-  }
-
-  .sns-service-input {
+  .service-input {
     .MuiAutocomplete-root {
       width: 70%;
     }
   }
 
-  .sns-service-form {
-  }
-
-  .sns-collapse-title {
-    padding: 0em 1em;
-    background-color: ${Colors.primaryColor};
-    color: ${Colors.white};
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-
-    .MuiSvgIcon-root {
-      color: ${Colors.white};
-    }
-  }
-
-  .sns-collapse-body {
-    width: 100%;
-    padding: 2em;
-    background-color: ${Colors.lightGray};
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-
-    .sns-delete {
-      padding: 0.7em !important;
-      min-width: unset !important;
-    }
-  }
-
-
-
-    ${genCommonClasses()}
+  ${genCommonClasses()}
 `;
 
 function genCommonClasses() {
@@ -275,6 +141,9 @@ function genCommonClasses() {
     }
     .align-center {
       align-items: center !important;
+    }
+    .flex-1 {
+      flex: 1 !important;
     }
   `;
 

@@ -6,6 +6,7 @@ import {
   createMuiTheme,
 } from "@material-ui/core/styles";
 import { Colors } from "../themes";
+import AppContextProvider from "../context/index";
 
 const theme = {
   primary: Colors.primaryColor,
@@ -25,7 +26,9 @@ export default class App extends NextApp {
     return (
       <StyledThemeProvider theme={theme}>
         <MaterialThemeProvider theme={theme}>
-          <Component {...pageProps} />
+          <AppContextProvider>
+            <Component {...pageProps} />
+          </AppContextProvider>
         </MaterialThemeProvider>
       </StyledThemeProvider>
     );

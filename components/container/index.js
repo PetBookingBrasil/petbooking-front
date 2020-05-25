@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import Typography from "@material-ui/core/Typography";
 
@@ -11,8 +11,11 @@ import {
   NavLink,
   NavIcon,
 } from "./styles";
+import { AppContext } from "../../context";
 
 export default function Container({ children }) {
+  const { state, dispatch } = useContext(AppContext);
+
   const navItems = [
     {
       name: "Agenda",
@@ -195,8 +198,8 @@ export default function Container({ children }) {
       <Nav>
         <AvatarWrapper>
           <Name>
-            <Typography variant="body2" className="margin-l-1">
-              Equipe Pet Booking
+            <Typography variant="body2" className="margin-l-0">
+              {state.user.name}
             </Typography>
             <NavIcon>
               <img src="/menu-icon-exit.svg" alt="" />

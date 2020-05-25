@@ -1,21 +1,21 @@
 import React, { useState } from "react";
 
-import {
-  Grid,
-  InputLabel,
-  TextField,
-  Collapse,
-  Typography,
-  Divider,
-  Button,
-  IconButton,
-  Select,
-  MenuItem,
-  Input,
-  Chip,
-} from "@material-ui/core";
+import Grid from "@material-ui/core/Grid";
+import InputLabel from "@material-ui/core/InputLabel";
+import TextField from "@material-ui/core/TextField";
+import Collapse from "@material-ui/core/Collapse";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import Chip from "@material-ui/core/Chip";
 
-import { ExpandLess, ExpandMore, Remove } from "@material-ui/icons";
+import ExpandLess from "@material-ui/icons/ExpandLess";
+import ExpandMore from "@material-ui/icons/ExpandMore";
+import Remove from "@material-ui/icons/Remove";
+
+import { CollapseTitle, CollapseBody } from "./styles";
 
 import { DaysMask, MoneyMask, DurationMask } from "../../../helpers/Masks";
 
@@ -30,6 +30,8 @@ export default function ServiceForm(props) {
       { x: ["Pequeno", "Médio", "Grande", "Gigante"] },
       { y: ["Curto", "Médio", "Longo"] },
     ],
+    priceBreedOpen: true,
+    priceSizeOpen: true,
   });
   const [breeds, setBreeds] = useState([
     { slug: "pinscher", name: "Affenpinchser" },
@@ -39,18 +41,13 @@ export default function ServiceForm(props) {
   ]);
 
   return (
-    <Grid
-      container
-      justify="center"
-      alignItems="center"
-      className="sns-service-form mt-3"
-    >
+    <Grid container justify="center" alignItems="center" className="margin-t-3">
       <Grid
         container
         justify="space-between"
         alignItems="center"
         spacing={3}
-        className="mb-4"
+        className="margin-b-4"
       >
         <Grid item xs={4}>
           <InputLabel>Custo</InputLabel>
@@ -93,13 +90,8 @@ export default function ServiceForm(props) {
         </Grid>
       </Grid>
 
-      <Grid container className="mb-4">
-        <Grid
-          container
-          justify="space-between"
-          alignItems="center"
-          className="sns-collapse-title"
-        >
+      <Grid container className="margin-b-4">
+        <CollapseTitle container justify="space-between" alignItems="center">
           <Typography variant="body2">
             Variação de preço: Raça e pelagem
           </Typography>
@@ -110,8 +102,8 @@ export default function ServiceForm(props) {
           >
             {!!state.priceBreedOpen ? <ExpandLess /> : <ExpandMore />}
           </IconButton>
-        </Grid>
-        <Collapse in={state.priceBreedOpen} className="sns-collapse-body">
+        </CollapseTitle>
+        <CollapseBody in={state.priceBreedOpen}>
           <Grid container direction="column">
             <Grid
               container
@@ -167,13 +159,16 @@ export default function ServiceForm(props) {
               </Grid>
             </Grid>
 
-            <Divider className="mt-5 mb-5" />
-
-            <Grid container direction="column" spacing={1} className="mt-5">
+            <Grid
+              container
+              direction="column"
+              spacing={1}
+              className="margin-t-5"
+            >
               {state.breeds.map((item) => (
                 <Grid item>
                   <Grid container spacing={1}>
-                    <Grid item xs={1} className="mr-2">
+                    <Grid item xs={1} className="margin-r-2">
                       {item.name}
                     </Grid>
                     <Grid item>
@@ -225,7 +220,7 @@ export default function ServiceForm(props) {
                       />
                     </Grid>
                     <Grid item xs={1}>
-                      <Button variant="contained" className="sns-delete">
+                      <Button variant="contained">
                         <Remove fontSize="small" />
                       </Button>
                     </Grid>
@@ -234,16 +229,11 @@ export default function ServiceForm(props) {
               ))}
             </Grid>
           </Grid>
-        </Collapse>
+        </CollapseBody>
       </Grid>
 
-      <Grid container className="mb-4">
-        <Grid
-          container
-          justify="space-between"
-          alignItems="center"
-          className="sns-collapse-title"
-        >
+      <Grid container className="margin-b-4">
+        <CollapseTitle container justify="space-between" alignItems="center">
           <Typography variant="body2">
             Variação de preço: Porte e pelagem
           </Typography>
@@ -254,10 +244,15 @@ export default function ServiceForm(props) {
           >
             {!!state.priceSizeOpen ? <ExpandLess /> : <ExpandMore />}
           </IconButton>
-        </Grid>
-        <Collapse in={state.priceSizeOpen} className="sns-collapse-body">
+        </CollapseTitle>
+        <CollapseBody in={state.priceSizeOpen}>
           <Grid container direction="column">
-            <Grid container direction="column" spacing={1} className="mt-5">
+            <Grid
+              container
+              direction="column"
+              spacing={1}
+              className="margin-t-5"
+            >
               <Grid item>
                 <Grid container spacing={3}>
                   <Grid item xs={1}></Grid>
@@ -280,7 +275,7 @@ export default function ServiceForm(props) {
               <Grid item>
                 <Grid container spacing={1}>
                   <Grid item xs={1}>
-                    Curto
+                    <Typography variant="body2">Curto</Typography>
                   </Grid>
                   <Grid item>
                     <TextField
@@ -319,7 +314,7 @@ export default function ServiceForm(props) {
                     />
                   </Grid>
                   <Grid item xs={1}>
-                    <Button variant="contained" className="sns-delete">
+                    <Button variant="contained">
                       <Remove fontSize="small" />
                     </Button>
                   </Grid>
@@ -329,7 +324,7 @@ export default function ServiceForm(props) {
               <Grid item>
                 <Grid container spacing={1}>
                   <Grid item xs={1}>
-                    Médio
+                    <Typography variant="body2">Médio</Typography>
                   </Grid>
                   <Grid item>
                     <TextField
@@ -368,7 +363,7 @@ export default function ServiceForm(props) {
                     />
                   </Grid>
                   <Grid item xs={1}>
-                    <Button variant="contained" className="sns-delete">
+                    <Button variant="contained">
                       <Remove fontSize="small" />
                     </Button>
                   </Grid>
@@ -378,7 +373,7 @@ export default function ServiceForm(props) {
               <Grid item>
                 <Grid container spacing={1}>
                   <Grid item xs={1}>
-                    Longo
+                    <Typography variant="body2">Longo</Typography>
                   </Grid>
                   <Grid item>
                     <TextField
@@ -417,7 +412,7 @@ export default function ServiceForm(props) {
                     />
                   </Grid>
                   <Grid item xs={1}>
-                    <Button variant="contained" className="sns-delete">
+                    <Button variant="contained">
                       <Remove fontSize="small" />
                     </Button>
                   </Grid>
@@ -425,7 +420,7 @@ export default function ServiceForm(props) {
               </Grid>
             </Grid>
           </Grid>
-        </Collapse>
+        </CollapseBody>
       </Grid>
 
       <Grid
@@ -433,9 +428,9 @@ export default function ServiceForm(props) {
         direction="column"
         justify="center"
         alignItems="center"
-        className="mb-4"
+        className="margin-b-4"
       >
-        <Grid item className="mb-2">
+        <Grid item className="margin-b-2">
           <Typography variant="body1">
             Lembrete de retorno (mensagem de pós venda)
           </Typography>
@@ -459,8 +454,8 @@ export default function ServiceForm(props) {
         </Grid>
       </Grid>
 
-      <Grid container justify="center" className="mb-4">
-        <Button variant="contained" className="px-5">
+      <Grid container justify="center" className="margin-b-4">
+        <Button variant="contained" className="padding-l-5 padding-r-5">
           Salvar
         </Button>
       </Grid>

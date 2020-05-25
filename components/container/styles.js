@@ -54,7 +54,7 @@ export const Name = styled.div`
   align-items: center;
 
   width: 100%;
-  padding: 0.438em ${Metrics.m1};
+  padding: 0.438em ${Metrics.m1} 0.438em ${Metrics.m0};
 
   img {
     width: 32px;

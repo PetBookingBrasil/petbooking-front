@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 
 import {
   Divider,
@@ -11,7 +11,6 @@ import {
 } from "@material-ui/core";
 
 import SiteHeader from "../../components/header";
-import Container from "../../components/container";
 
 import Header from "../../components/services/header";
 import Employees from "../../components/services/employees";
@@ -20,12 +19,16 @@ import ServiceInput from "../../components/services/serviceInput";
 import ServiceForm from "../../components/services/serviceForm";
 import CustomDialog from "../../components/services/customDialog";
 
+import { AppContext } from "../../context";
+
 export default function ServicesPage() {
+  const { state, dispatch } = useContext(AppContext);
+
   const props = {
     employees: [],
     service_categories: [],
   };
-  const [state, setState] = useState({
+  const [data, setData] = useState({
     employee: {},
     addStep: 0,
     service: 0,
@@ -34,92 +37,98 @@ export default function ServicesPage() {
 
   const setFirstEmployee = () => {
     if (!!props.employees.length) {
-      setState({ ...state, employee: props.employees[0] });
+      setData({ ...data, employee: props.employees[0] });
     }
   };
 
+  useEffect(() => {
+    dispatch("@serviceCategory/SERVICE_CATEGORIES_REQUEST");
+  }, []);
+
+  console.log("LALA", state.serviceCategory.data);
+
   return (
-    <Container>
+    <>
       <SiteHeader></SiteHeader>
 
       <Header
-        employee={state.employee}
-        showBack={state.addStep > 0}
-        backAction={() => setState({ ...state, addStep: 0 })}
-        addService={() => setState({ ...state, addStep: 1 })}
-        addCategory={() => setState({ ...state, newCategory: { open: true } })}
-        addStep={state.addStep}
-        service={state.service}
+        employee={data.employee}
+        showBack={data.addStep > 0}
+        backAction={() => setData({ ...data, addStep: 0 })}
+        addService={() => setData({ ...data, addStep: 1 })}
+        addCategory={() => setData({ ...data, newCategory: { open: true } })}
+        addStep={data.addStep}
+        service={data.service}
       />
 
       <Divider className="margin-t-3 margin-b-3" />
 
-      {state.addStep === 0 && (
+      {data.addStep === 0 && (
         <React.Fragment>
           {!!props.employees.length && (
             <Employees
               data={props.employees}
-              employee={state.employee}
-              setEmployee={(e) => setState({ ...state, employee: e })}
+              employee={data.employee}
+              setEmployee={(e) => setData({ ...data, employee: e })}
             />
           )}
           <Services
             data={
-              !!state.employee.id
-                ? state.employee.service_categories
+              !!data.employee.id
+                ? data.employee.service_categories
                 : props.service_categories
             }
-            employee={state.employee}
+            employee={data.employee}
             setEmployee={(e) => {
               if (!!!e.service_categories) {
-                setState({
-                  ...state,
+                setData({
+                  ...data,
                   employee: props.employees.find((item) => item.id === e.id),
                 });
               } else {
-                setState({ ...state, employee: e });
+                setData({ ...data, employee: e });
               }
             }}
             setFirstEmployee={setFirstEmployee}
           />
         </React.Fragment>
       )}
-      {state.addStep === 1 && (
+      {data.addStep === 1 && (
         <ServiceInput
           services={[{ id: 1, name: "Banho" }]}
           setService={(e) => {
-            setState({ ...state, service: e, addStep: state.addStep + 1 });
+            setData({ ...data, service: e, addStep: data.addStep + 1 });
           }}
         />
       )}
-      {state.addStep === 2 && <ServiceForm service={state.service} />}
+      {data.addStep === 2 && <ServiceForm service={data.service} />}
 
       <CustomDialog
         header="Adicionar categoria"
-        open={state.newCategory.open}
-        onClose={() => setState({ ...state, newCategory: { open: false } })}
+        open={data.newCategory.open}
+        onClose={() => setData({ ...data, newCategory: { open: false } })}
       >
         <DialogContent>
           <InputLabel>Nome</InputLabel>
           <TextField
             variant="outlined"
             placeholder="Nome da categoria"
-            value={state.newCategory.name}
+            value={data.newCategory.name}
             fullWidth
             size="small"
             onChange={(e) => setComission(e.target.value)}
-            className="mb-3"
+            className="margin-b-3"
           />
 
           <InputLabel>Categoria filha de</InputLabel>
           <TextField
             variant="outlined"
             placeholder="HH:MM"
-            value={state.newCategory.parent}
+            value={data.newCategory.parent}
             fullWidth
             size="small"
             onChange={(e) => setDuration(e.target.value)}
-            className="mb-3"
+            className="margin-b-3"
           />
         </DialogContent>
         <DialogActions>
@@ -129,7 +138,7 @@ export default function ServicesPage() {
                 Cancelar
               </Button>
             </Grid>
-            <Grid item md={6} className="d-flex justify-content-end">
+            <Grid item md={6} className="d-flex justify-end">
               <Button variant="contained" color="primary">
                 Salvar
               </Button>
@@ -137,6 +146,6 @@ export default function ServicesPage() {
           </Grid>
         </DialogActions>
       </CustomDialog>
-    </Container>
+    </>
   );
 }
