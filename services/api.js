@@ -3,10 +3,8 @@
 
 import fetch from "isomorphic-unfetch";
 
-const BASE_URL = "http://localhost:3000/";
-
 export const request = async (url, options) => {
-  return fetch(BASE_URL + url, {
+  return fetch(process.env.PB_URL + url, {
     ...options,
     body: !!options.body ? JSON.stringify(options.body) : null,
     headers: {
