@@ -1,10 +1,14 @@
 import React, { createContext, useState } from "react";
+
 import userState from "./user/initialState";
 import serviceState from "./service/initialState";
 import serviceCategoryState from "./serviceCategory/initialState";
+import campaignsState from "./campaigns/initialState";
 import userActions from "./user/actions";
 import serviceActions from "./service/actions";
 import serviceCategoryActions from "./serviceCategory/actions";
+import campaignsActions from "./campaigns/actions";
+
 import { toCamel } from "../helpers/util";
 
 // Load initial states from all modules
@@ -12,6 +16,7 @@ const INITIAL_STATE = {
   user: userState,
   service: serviceState,
   serviceCategory: serviceCategoryState,
+  campaigns: campaignsState,
 };
 
 // Load actions from all modules
@@ -19,6 +24,7 @@ const actions = {
   user: userActions,
   service: serviceActions,
   serviceCategory: serviceCategoryActions,
+  campaigns: campaignsActions,
 };
 
 const AppContextProvider = (props) => {

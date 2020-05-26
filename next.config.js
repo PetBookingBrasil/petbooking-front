@@ -8,6 +8,7 @@ module.exports = {
     return {
       "/": { page: "/services" },
       "/services": { page: "/services" },
+      "/admin/campaigns": { page: "/admin/campaigns" },
     };
   },
 };
