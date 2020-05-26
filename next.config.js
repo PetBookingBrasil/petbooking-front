@@ -3,7 +3,8 @@ module.exports = {
   ...withImages(),
   exportPathMap: async function () {
     return {
-      "/services": { page: "/" },
+      "/": { page: "/services" },
+      "/services": { page: "/services" },
     };
   },
 };

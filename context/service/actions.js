@@ -7,8 +7,6 @@ export const servicesRequest = async (data = null, state) => {
   updateState(state, { fetching: true });
 
   let response = await getServices();
-  console.log("RESPONSE", response, await response.json());
-
   if (response.ok) {
     let json = await response.json();
     servicesSuccess(json.data, state);

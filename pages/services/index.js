@@ -19,6 +19,8 @@ import ServiceInput from "../../components/services/serviceInput";
 import ServiceForm from "../../components/services/serviceForm";
 import CustomDialog from "../../components/services/customDialog";
 
+import Container from "../../components/container";
+
 import { AppContext } from "../../context";
 
 export default function ServicesPage() {
@@ -45,10 +47,8 @@ export default function ServicesPage() {
     dispatch("@serviceCategory/SERVICE_CATEGORIES_REQUEST");
   }, []);
 
-  console.log("LALA", state.serviceCategory.data);
-
   return (
-    <>
+    <Container>
       <SiteHeader></SiteHeader>
 
       <Header
@@ -146,6 +146,6 @@ export default function ServicesPage() {
           </Grid>
         </DialogActions>
       </CustomDialog>
-    </>
+    </Container>
   );
 }

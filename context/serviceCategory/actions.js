@@ -14,8 +14,6 @@ export const serviceCategoriesRequest = async (data = null, state) => {
 };
 
 export const serviceCategoriesSuccess = async (data, state) => {
-  console.log("INNER DATA", data);
-
   updateState(state, {
     data: data,
     fetching: false,
