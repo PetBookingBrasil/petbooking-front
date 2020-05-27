@@ -14,7 +14,7 @@ import SiteHeader from "../../components/header";
 
 import Header from "../../components/services/header";
 import Employees from "../../components/services/employees";
-import Services from "../../components/services/services";
+import ServiceCategories from "../../components/services/serviceCategories";
 import ServiceInput from "../../components/services/serviceInput";
 import ServiceForm from "../../components/services/serviceForm";
 import CustomDialog from "../../components/services/customDialog";
@@ -30,6 +30,11 @@ export default function ServicesPage() {
     employees: [],
     service_categories: [],
   };
+
+  const [serviceCategories, setServiceCategories] = useState(
+    state.serviceCategory.data
+  );
+
   const [data, setData] = useState({
     employee: {},
     addStep: 0,
@@ -46,6 +51,10 @@ export default function ServicesPage() {
   useEffect(() => {
     dispatch("@serviceCategory/SERVICE_CATEGORIES_REQUEST");
   }, []);
+
+  useEffect(() => {
+    setServiceCategories(state.serviceCategory.data);
+  }, [state.serviceCategory.data]);
 
   return (
     <Container>
@@ -72,12 +81,8 @@ export default function ServicesPage() {
               setEmployee={(e) => setData({ ...data, employee: e })}
             />
           )}
-          <Services
-            data={
-              !!data.employee.id
-                ? data.employee.service_categories
-                : props.service_categories
-            }
+          <ServiceCategories
+            data={serviceCategories}
             employee={data.employee}
             setEmployee={(e) => {
               if (!!!e.service_categories) {
@@ -93,6 +98,7 @@ export default function ServicesPage() {
           />
         </React.Fragment>
       )}
+
       {data.addStep === 1 && (
         <ServiceInput
           services={[{ id: 1, name: "Banho" }]}
@@ -101,6 +107,7 @@ export default function ServicesPage() {
           }}
         />
       )}
+
       {data.addStep === 2 && <ServiceForm service={data.service} />}
 
       <CustomDialog

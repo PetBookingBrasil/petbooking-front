@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import Grid from "@material-ui/core/Grid";
-import { Colors, Metrics } from ".././../../themes";
+import { Colors, Metrics } from "../../../themes";
 
 export const Component = styled(Grid)`
-  border-left: 2px solid transparent;
-  border-bottom: 1px dotted ${Colors.lightGray};
+  border-left: 2px solid ${Colors.primaryColor};
+  border-bottom: 1px dotted ${Colors.backgroundGray};
   padding: ${Metrics.m3} ${Metrics.m2} ${Metrics.m3} ${Metrics.m2};
 
   ${(props) =>
@@ -23,7 +23,7 @@ export const SkillBtn = styled.div`
   width: 100%;
   border-radius: 4px;
   font-size: 0.6em;
-  background-color: ${Colors.lightGray};
+  background-color: ${Colors.backgroundGray};
   &:hover {
     cursor: pointer;
   }

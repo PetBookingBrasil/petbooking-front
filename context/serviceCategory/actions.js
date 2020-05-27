@@ -15,7 +15,14 @@ export const serviceCategoriesRequest = async (data = null, state) => {
 
 export const serviceCategoriesSuccess = async (data, state) => {
   updateState(state, {
-    data: data,
+    data: data.map((item) => ({
+      ...item.attributes,
+      id: item.id,
+      services: item.attributes.services.map((inner) => ({
+        ...inner.data.attributes,
+        id: inner.data.id,
+      })),
+    })),
     fetching: false,
   });
 };

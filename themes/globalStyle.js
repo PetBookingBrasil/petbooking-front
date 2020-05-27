@@ -9,7 +9,7 @@ const GlobalStyle = createGlobalStyle`
       @media (max-width: 768px) {
         font-size: 14px;
       }
-      font-family: Roboto !important;
+      font-family: 'Roboto', sans-serif !important;
     }
 
 

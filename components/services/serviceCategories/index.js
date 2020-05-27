@@ -13,10 +13,15 @@ import {
 } from "@material-ui/core";
 
 import { DurationMask } from "../../../helpers/Masks";
-import ListItem from "../listItem";
+import ServiceCategoryItem from "../serviceCategoryItem";
 import CustomDialog from "../customDialog";
 
-export default function Services(props) {
+export default function ServiceCategories({
+  data,
+  employee,
+  setEmployee,
+  setFirstEmployee,
+}) {
   const [state, setState] = useState({
     currentService: {},
     editModalOpen: false,
@@ -25,35 +30,31 @@ export default function Services(props) {
     petKind: { dog: false, cat: false, pig: false },
   });
 
-  return (
-    <Grid container className="mt-5">
-      {props.data.map((item) => (
-        <React.Fragment key={item.id}>
-          <ListItem data={item} />
+  console.log(!!data.length ? data[0].services[0] : []);
 
-          {item.services.map((item) => (
-            <ListItem
-              key={item.id}
-              data={item}
-              employee={props.employee}
-              setEmployee={props.setEmployee}
-              setFirstEmployee={props.setFirstEmployee}
-              subItem
-              editItem={(item) => {
-                setState({
-                  ...state,
-                  editModalOpen: true,
-                  currentService: item,
-                });
-              }}
-            />
-          ))}
-        </React.Fragment>
+  return (
+    <Grid container className="margin-t-5">
+      {data.map((item) => (
+        <ServiceCategoryItem
+          key={item.id}
+          data={item}
+          employee={employee}
+          setEmployee={setEmployee}
+          setFirstEmployee={setFirstEmployee}
+          subItem
+          editItem={(item) => {
+            setState({
+              ...state,
+              editModalOpen: true,
+              currentService: item,
+            });
+          }}
+        />
       ))}
 
       <CustomDialog
         header={`Editando ${state.currentService.name} ${
-          !!props.employee.id ? "para " + props.employee.name : ""
+          !!employee.id ? "para " + employee.name : ""
         }`}
         open={state.editModalOpen}
         onClose={() => setState({ ...state, editModalOpen: false })}
@@ -68,7 +69,7 @@ export default function Services(props) {
             fullWidth
             size="small"
             onChange={(e) => setState({ ...state, comission: e.target.value })}
-            className="mb-3"
+            className="margin-b-0"
           />
 
           <InputLabel>DURAÇÃO</InputLabel>
@@ -79,7 +80,7 @@ export default function Services(props) {
             fullWidth
             size="small"
             onChange={(e) => seState({ ...state, duration: e.target.value })}
-            className="mb-3"
+            className="margin-b-0"
             InputProps={{
               inputComponent: DurationMask,
             }}
@@ -94,7 +95,7 @@ export default function Services(props) {
                   onChange={() =>
                     setState({
                       ...state,
-                      petKind: { ...state.petKind, dog: !petKind.dog },
+                      petKind: { ...state.petKind, dog: !state.petKind.dog },
                     })
                   }
                   name="dog"
@@ -110,7 +111,7 @@ export default function Services(props) {
                   onChange={() =>
                     setState({
                       ...state,
-                      petKind: { ...state.petKind, cat: !petKind.cat },
+                      petKind: { ...state.petKind, cat: !state.petKind.cat },
                     })
                   }
                   name="cat"
@@ -123,7 +124,9 @@ export default function Services(props) {
                 <Checkbox
                   color="default"
                   checked={state.petKind.pig}
-                  onChange={() => setPetKind({ ...petKind, pig: !petKind.pig })}
+                  onChange={() =>
+                    setPetKind({ ...state.petKind, pig: !state.petKind.pig })
+                  }
                   name="pig"
                 />
               }
@@ -138,7 +141,7 @@ export default function Services(props) {
                 Cancelar
               </Button>
             </Grid>
-            <Grid item md={6} className="d-flex justify-content-end">
+            <Grid item md={6} className="d-flex justify-end">
               <Button variant="contained" color="primary">
                 Salvar
               </Button>

@@ -1,3 +1,4 @@
+import Head from "next/head";
 import NextApp from "next/app";
 import React from "react";
 import { ThemeProvider as StyledThemeProvider } from "styled-components";
@@ -54,6 +55,13 @@ export default class App extends NextApp {
       <StyledThemeProvider theme={theme}>
         <MaterialThemeProvider theme={theme}>
           <AppContextProvider>
+            <Head>
+              <link
+                href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap"
+                rel="stylesheet"
+              ></link>
+            </Head>
+
             <GlobalStyle />
 
             <Component {...pageProps} />
