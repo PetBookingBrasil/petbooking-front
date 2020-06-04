@@ -4,9 +4,13 @@ import produce from "immer";
 /* ------------- Types and Action Creators ------------- */
 
 const { Types, Creators } = createActions({
+  setStep: ["data"],
   servicesRequest: ["data"],
   servicesSuccess: ["data"],
   servicesFailure: ["data"],
+  createServiceRequest: ["data"],
+  createServiceSuccess: ["data"],
+  createServiceFailure: ["data"],
 });
 
 export const ServiceTypes = Types;
@@ -17,15 +21,22 @@ export default Creators;
 export const INITIAL_STATE = {
   data: [],
   fetching: false,
+  saving: false,
+  step: 0,
 };
 
 /* ------------- Selectors ------------- */
 
 export const ServiceSelectors = {
-  employment: (state) => state.employment,
+  service: (state) => state.service,
 };
 
 /* ------------- Reducers ------------- */
+
+export const setStep = (state, { data }) =>
+  produce(state, (draft) => {
+    draft.step = data;
+  });
 
 export const servicesRequest = (state, { data }) =>
   produce(state, (draft) => {
@@ -35,7 +46,7 @@ export const servicesRequest = (state, { data }) =>
 export const servicesSuccess = (state, { data }) =>
   produce(state, (draft) => {
     draft.fetching = false;
-    draft.data = data;
+    draft.data = data.data;
   });
 
 export const servicesFailure = (state, { data }) =>
@@ -43,15 +54,29 @@ export const servicesFailure = (state, { data }) =>
     draft.fetching = false;
   });
 
-export const signUpRequest = (state, { data }) =>
+export const createServiceRequest = (state, { data }) =>
   produce(state, (draft) => {
-    draft.fetching = true;
+    draft.saving = true;
+  });
+
+export const createServiceSuccess = (state, { data }) =>
+  produce(state, (draft) => {
+    draft.saving = false;
+  });
+
+export const createServiceFailure = (state, { data }) =>
+  produce(state, (draft) => {
+    draft.saving = false;
   });
 
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
+  [Types.SET_STEP]: setStep,
   [Types.SERVICES_REQUEST]: servicesRequest,
   [Types.SERVICES_SUCCESS]: servicesSuccess,
   [Types.SERVICES_FAILURE]: servicesFailure,
+  [Types.CREATE_SERVICE_REQUEST]: createServiceRequest,
+  [Types.CREATE_SERVICE_SUCCESS]: createServiceSuccess,
+  [Types.CREATE_SERVICE_FAILURE]: createServiceFailure,
 });

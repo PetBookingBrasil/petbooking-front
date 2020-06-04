@@ -6,7 +6,7 @@ export const Component = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding: ${Metrics.m0};
+  padding: ${Metrics.m0} ${Metrics.m3};
   margin-left: 60px;
   margin-top: ${Metrics.m4};
 `;

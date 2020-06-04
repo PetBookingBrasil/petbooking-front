@@ -1,7 +1,9 @@
-import { useState, useContext, useEffect } from "react";
+import Head from "next/head";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import EmploymentActions from "../../store/reducers/employment";
 import ServiceCategoryActions from "../../store/reducers/serviceCategory";
+import ServiceActions from "../../store/reducers/service";
 
 import Divider from "@material-ui/core/Divider";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -27,16 +29,16 @@ import Container from "../../components/container";
 
 export default function ServicesPage() {
   const dispatch = useDispatch();
-  const { employment, serviceCategory } = useSelector(
-    ({ employment, serviceCategory }) => ({
+  const { employment, service, serviceCategory } = useSelector(
+    ({ employment, service, serviceCategory }) => ({
       employment,
       serviceCategory,
+      service,
     })
   );
 
   const [data, setData] = useState({
     employment: {},
-    addStep: 0,
     service: 0,
     newCategory: { open: false, name: "", ancestry: "" },
   });
@@ -51,6 +53,7 @@ export default function ServicesPage() {
     document.addEventListener("scroll", trackScrolling);
 
     dispatch(ServiceCategoryActions.serviceCategoriesRequest());
+    dispatch(ServiceActions.servicesRequest());
     dispatch(EmploymentActions.employmentsRequest());
     return () => {
       document.removeEventListener("scroll", trackScrolling);
@@ -90,21 +93,25 @@ export default function ServicesPage() {
 
   return (
     <Container>
+      <Head>
+        <title>Serviços e habilidades</title>
+      </Head>
+
       <SiteHeader></SiteHeader>
 
       <Header
         employment={data.employment}
-        showBack={data.addStep > 0}
-        backAction={() => setData({ ...data, addStep: 0 })}
-        addService={() => setData({ ...data, addStep: 1 })}
+        showBack={service.step > 0}
+        backAction={() => dispatch(ServiceActions.setStep(0))}
+        addService={() => dispatch(ServiceActions.setStep(1))}
         addCategory={() => setData({ ...data, newCategory: { open: true } })}
-        addStep={data.addStep}
+        step={service.step}
         service={data.service}
       />
 
       <Divider className="margin-t-3 margin-b-3" />
 
-      {data.addStep === 0 && (
+      {service.step === 0 && (
         <React.Fragment>
           {!!employment.fetching && (
             <Grid
@@ -113,7 +120,7 @@ export default function ServicesPage() {
               alignItems="center"
               className="margin-b-4"
             >
-              <CircularProgress />
+              <CircularProgress color="secondary" />
             </Grid>
           )}
 
@@ -158,22 +165,32 @@ export default function ServicesPage() {
               alignItems="center"
               className="margin-t-4"
             >
-              <CircularProgress />
+              <CircularProgress color="secondary" />
             </Grid>
           )}
         </React.Fragment>
       )}
 
-      {data.addStep === 1 && (
+      {service.step === 1 && (
         <ServiceInput
-          services={[{ id: 1, name: "Banho" }]}
-          setService={(e) => {
-            setData({ ...data, service: e, addStep: data.addStep + 1 });
+          categories={serviceCategory.data}
+          setCategory={(e) => {
+            setData({
+              ...data,
+              newService: { ...data.newService, category: e },
+            });
+            dispatch(ServiceActions.setStep(service.step + 1));
           }}
         />
       )}
 
-      {data.addStep === 2 && <ServiceForm service={data.service} />}
+      {service.step === 2 && (
+        <ServiceForm
+          newService={data.newService}
+          services={service.data}
+          categories={serviceCategory.data}
+        />
+      )}
 
       <CustomDialog
         header="Adicionar categoria"
@@ -187,7 +204,6 @@ export default function ServicesPage() {
             placeholder="Nome da categoria"
             value={data.newCategory.name}
             fullWidth
-            size="small"
             onChange={(e) =>
               setData({
                 ...data,
@@ -238,7 +254,11 @@ export default function ServicesPage() {
                 onClick={handleSaveCategory}
                 endIcon={
                   !!serviceCategory.saving && (
-                    <CircularProgress size={20} className="white" />
+                    <CircularProgress
+                      color="secondary"
+                      size={20}
+                      className="white"
+                    />
                   )
                 }
               >

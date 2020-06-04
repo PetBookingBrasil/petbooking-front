@@ -80,7 +80,6 @@ export default function ServiceCategories({
             type="number"
             value={state.comission}
             fullWidth
-            size="small"
             onChange={(e) => setState({ ...state, comission: e.target.value })}
             className="margin-b-0"
           />
@@ -91,7 +90,6 @@ export default function ServiceCategories({
             placeholder="HH:MM"
             value={state.duration}
             fullWidth
-            size="small"
             onChange={(e) => seState({ ...state, duration: e.target.value })}
             className="margin-b-0"
             InputProps={{

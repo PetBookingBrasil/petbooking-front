@@ -8,7 +8,7 @@ import { Employment, ImageWrapper, Count, Initials } from "./styles";
 
 export default function Employments({ employment, setEmployment, data }) {
   return (
-    <Grid container alignItems="center">
+    <Grid container spacing={3} alignItems="center">
       <Grid item md={2}>
         <Button
           variant="contained"

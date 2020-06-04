@@ -7,7 +7,7 @@ export const getConsumerToken = () => localStorage.getItem("@pb/consumerToken");
 
 const api = apisauce.create({
   baseURL: "http://localhost:3000/",
-  timeout: 10000,
+  timeout: 30000,
   headers: {
     "Content-Type": "application/vnd.api+json",
     Accept: "application/vnd.petbooking-v1+json",
@@ -55,6 +55,26 @@ const services = () =>
     business_id: getBusinessId(),
   });
 
+const createService = (params) => {
+  return api.post("api/v3/services", {
+    service: {
+      application: "petbooking",
+      business_id: getBusinessId(),
+      name: params.name,
+      service_category_id: params.category,
+      description: params.description,
+      ancestry: params.ancestry,
+      price: params.price,
+      cost: params.cost,
+      iss_type: params.issType,
+      duration: params.duration,
+      municipal_code: params.municipalCode,
+      reschedule_reminder_days_after: params.sendAfter,
+      reschedule_reminder_message: params.sendAfterMessage,
+    },
+  });
+};
+
 // ServiceCategory requests
 
 const serviceCategories = (params) =>
@@ -65,15 +85,8 @@ const serviceCategories = (params) =>
     per_page: params.meta.perPage,
   });
 
-const createServiceCategory = (params) => {
-  console.log("DAISHIDUAS", {
-    name: params.name,
-    application: "petbooking",
-    business_id: getBusinessId(),
-    ancestry: params.ancestry,
-  });
-
-  return api.post("api/v3/service_categories", {
+const createServiceCategory = (params) =>
+  api.post("api/v3/service_categories", {
     service_category: {
       name: params.name,
       application: "petbooking",
@@ -81,13 +94,22 @@ const createServiceCategory = (params) => {
       ancestry: params.ancestry,
     },
   });
-};
+
+// ServicePriceRule requests
+
+const rules = () =>
+  api.get("api/v3/service_price_rules", {
+    application: "petbooking",
+  });
+
 const requests = {
   setConsumerToken,
   employments,
   services,
+  createService,
   serviceCategories,
   createServiceCategory,
+  rules,
 };
 
 export default requests;

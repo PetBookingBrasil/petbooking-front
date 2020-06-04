@@ -1,24 +1,31 @@
-import React from 'react'
+import React from "react";
 
-import {
-  Grid,
-  TextField
-} from "@material-ui/core"
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import { Grid, TextField } from "@material-ui/core";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 
-export default function ServiceInput(props) {
+export default function ServiceInput({ categories, setCategory }) {
   return (
-    <Grid container justify="center" alignItems="center" className="sns-service-input">
+    <Grid
+      container
+      justify="center"
+      alignItems="center"
+      className="sns-service-input"
+    >
       <Autocomplete
-        options={props.services}
-        getOptionLabel={option => option.name}
-        noOptionsText="Não encontramos um serviço com esse nome"
+        options={categories}
+        getOptionLabel={(option) => option.name}
+        noOptionsText="Não encontramos uma categoria com esse nome"
         onChange={(e, item) => {
-          props.setService(item);
+          setCategory(item);
         }}
         fullWidth
-        renderInput={params => (
-          <TextField {...params} label="Busque um serviço" variant="outlined" fullWidth />
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Busque uma categoria"
+            variant="outlined"
+            fullWidth
+          />
         )}
       />
     </Grid>
