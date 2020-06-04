@@ -35,7 +35,7 @@ export const employmentsRequest = (state, { data }) =>
 export const employmentsSuccess = (state, { data }) =>
   produce(state, (draft) => {
     draft.fetching = false;
-    draft.data = data.data;
+    draft.data = data.data.sort((a, b) => b.skills.length - a.skills.length);
   });
 
 export const employmentsFailure = (state, { data }) =>

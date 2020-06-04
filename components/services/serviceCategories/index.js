@@ -30,11 +30,24 @@ export default function ServiceCategories({
     petKind: { dog: false, cat: false, pig: false },
   });
 
-  console.log(!!data.length ? data[0].services[0] : []);
+  const categories = !!!employment.id
+    ? data
+    : data
+        .filter((item) =>
+          item.services.some((inner) =>
+            inner.skills.map((sk) => sk.employment_id).includes(employment.id)
+          )
+        )
+        .map((item) => ({
+          ...item,
+          services: item.services.filter((inner) =>
+            inner.skills.map((sk) => sk.employment_id).includes(employment.id)
+          ),
+        }));
 
   return (
     <Grid container className="margin-t-5">
-      {data.map((item) => (
+      {categories.map((item) => (
         <ServiceCategoryItem
           key={item.id}
           data={item}
@@ -137,7 +150,11 @@ export default function ServiceCategories({
         <DialogActions>
           <Grid container justify="space-between">
             <Grid item md={6}>
-              <Button variant="contained" color="secondary">
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => setState({ ...state, editModalOpen: false })}
+              >
                 Cancelar
               </Button>
             </Grid>

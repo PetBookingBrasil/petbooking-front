@@ -34,11 +34,11 @@ export default function ServiceItem({
               {data.name}
             </Grid>
             <Grid item md={2} className="d-flex align-center">
-              <AttachMoney className="margin-r-2" />
+              <AttachMoney className="margin-r-0" />
               <Typography variant="caption">{price}</Typography>
             </Grid>
             <Grid item md={2} className="d-flex align-center">
-              <Schedule className="margin-r-2" />
+              <Schedule className="margin-r-0" />
               <Typography variant="caption">{data.duration}</Typography>
             </Grid>
             <Grid item md={2} className="d-flex align-center o-auto">
@@ -57,7 +57,7 @@ export default function ServiceItem({
                     key={item.id}
                     onClick={() => setEmployment(item)}
                   >
-                    <ImageWrapper className="margin-r-2">
+                    <ImageWrapper className="margin-r-0">
                       {item.avatar_url.includes("fallback") ? (
                         <Initials>
                           <span>{item.initials}</span>

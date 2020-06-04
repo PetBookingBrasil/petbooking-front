@@ -19,6 +19,9 @@ const api = apisauce.create({
 api.addRequestTransform((request) => {
   request.headers = {
     ...request.headers,
+    "Content-Type": request.url.includes("v3")
+      ? "application/json"
+      : "application/vnd.api+json",
     "X-Petbooking-Session-Token": `Token token="${getToken()}"`,
     Authorization: `Bearer ${getConsumerToken()}`,
     Jwt: getToken(),
@@ -54,17 +57,37 @@ const services = () =>
 
 // ServiceCategory requests
 
-const serviceCategories = () =>
+const serviceCategories = (params) =>
   api.get("api/v3/service_categories", {
     application: "petbooking",
     business_id: getBusinessId(),
+    page: params.meta.page,
+    per_page: params.meta.perPage,
   });
 
+const createServiceCategory = (params) => {
+  console.log("DAISHIDUAS", {
+    name: params.name,
+    application: "petbooking",
+    business_id: getBusinessId(),
+    ancestry: params.ancestry,
+  });
+
+  return api.post("api/v3/service_categories", {
+    service_category: {
+      name: params.name,
+      application: "petbooking",
+      business_id: getBusinessId(),
+      ancestry: params.ancestry,
+    },
+  });
+};
 const requests = {
   setConsumerToken,
   employments,
   services,
   serviceCategories,
+  createServiceCategory,
 };
 
 export default requests;

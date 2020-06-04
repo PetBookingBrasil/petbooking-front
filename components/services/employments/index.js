@@ -6,25 +6,29 @@ import Button from "@material-ui/core/Button";
 
 import { Employment, ImageWrapper, Count, Initials } from "./styles";
 
-export default function Employments(props) {
+export default function Employments({ employment, setEmployment, data }) {
   return (
     <Grid container alignItems="center">
       <Grid item md={2}>
         <Button
           variant="contained"
           fullWidth
-          className={!!!props.employment.id ? "sns-active" : "sns-inactive"}
-          onClick={() => props.setEmployment({})}
+          className={!!!employment.id ? "sns-active" : "sns-inactive"}
+          onClick={() => setEmployment({})}
         >
           Ver todos
         </Button>
       </Grid>
-      <Grid item md={10} className="d-flex o-auto">
-        {props.data.map((item, i) => (
+      <Grid
+        item
+        md={10}
+        className="d-flex o-auto align-start padding-t-2 padding-b-2"
+      >
+        {data.map((item, i) => (
           <Employment
             key={i}
-            active={props.employment.id === item.id}
-            onClick={() => props.setEmployment(item)}
+            active={employment.id === item.id}
+            onClick={() => setEmployment(item)}
           >
             <ImageWrapper>
               <Count>
@@ -39,7 +43,9 @@ export default function Employments(props) {
                 <img src={item.avatar_url}></img>
               )}
             </ImageWrapper>
-            <Typography variant="caption">{item.name}</Typography>
+            <Typography variant="caption" className="margin-t-1">
+              {item.name}
+            </Typography>
           </Employment>
         ))}
       </Grid>

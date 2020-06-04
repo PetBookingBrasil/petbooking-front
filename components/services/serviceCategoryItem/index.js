@@ -9,7 +9,7 @@ import { Component } from "./styles";
 
 export default function ServiceCategoryItem({
   data,
-  employee,
+  employment,
   setEmployment,
   setFirstEmployment,
   subItem,

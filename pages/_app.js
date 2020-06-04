@@ -1,6 +1,8 @@
 import Head from "next/head";
 import NextApp from "next/app";
 import React from "react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { END } from "redux-saga";
 import { wrapper } from "../store/configureStore";
@@ -58,9 +60,8 @@ class App extends NextApp {
               rel="stylesheet"
             ></link>
           </Head>
-
+          <ToastContainer autoClose={3000} />
           <GlobalStyle />
-
           <Index>
             <Component {...pageProps} />
           </Index>

@@ -3,7 +3,7 @@ import { Colors } from ".././../../themes";
 
 export const Employment = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   flex-direction: column;
   margin-right: 1em;

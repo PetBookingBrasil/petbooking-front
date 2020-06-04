@@ -5,7 +5,7 @@ import { Colors, Metrics } from "../../../themes";
 export const Component = styled(Grid)`
   border-left: 2px solid ${Colors.primaryColor};
   border-bottom: 1px dotted ${Colors.backgroundGray};
-  padding: ${Metrics.m3} ${Metrics.m2} ${Metrics.m3} ${Metrics.m2};
+  padding: ${Metrics.m1};
 
   ${(props) =>
     !!props.isService &&
