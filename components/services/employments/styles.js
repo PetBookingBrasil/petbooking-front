@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import { Colors } from ".././../../themes";
 
-export const Employee = styled.div`
+export const Employment = styled.div`
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   flex-direction: column;
   margin-right: 1em;
@@ -15,9 +15,7 @@ export const Employee = styled.div`
   }
 
   .MuiTypography-caption {
-    margin-top: 1em;
     text-align: center;
-    color: ${Colors.primaryColor};
     font-size: 0.6em !important;
     width: 10em;
   }
@@ -41,8 +39,8 @@ export const Count = styled.div`
   position: absolute;
   top: -1em;
   right: -1em;
-  width: 1.2em;
-  height: 1.2em;
+  width: 0.5em;
+  height: 0.5em;
   background-color: ${Colors.primaryColor};
   padding: 1em;
   color: ${Colors.white};

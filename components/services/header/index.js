@@ -21,7 +21,7 @@ export default function Header(props) {
           {props.addStep === 0 && (
             <b>
               Serviços e habilidades{" "}
-              {!!props.employee.id && ` de ${props.employee.nickname}`}
+              {!!props.employment.id && ` de ${props.employment.nickname}`}
             </b>
           )}
           {props.addStep === 1 && <b>Adicionar serviço</b>}

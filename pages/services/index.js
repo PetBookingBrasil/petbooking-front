@@ -1,19 +1,21 @@
 import { useState, useContext, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import EmploymentActions from "../../store/reducers/employment";
+import ServiceCategoryActions from "../../store/reducers/serviceCategory";
 
-import {
-  Divider,
-  DialogContent,
-  DialogActions,
-  InputLabel,
-  TextField,
-  Grid,
-  Button,
-} from "@material-ui/core";
+import Divider from "@material-ui/core/Divider";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogActions from "@material-ui/core/DialogActions";
+import InputLabel from "@material-ui/core/InputLabel";
+import TextField from "@material-ui/core/TextField";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 import SiteHeader from "../../components/header";
 
 import Header from "../../components/services/header";
-import Employees from "../../components/services/employees";
+import Employments from "../../components/services/employments";
 import ServiceCategories from "../../components/services/serviceCategories";
 import ServiceInput from "../../components/services/serviceInput";
 import ServiceForm from "../../components/services/serviceForm";
@@ -21,47 +23,42 @@ import CustomDialog from "../../components/services/customDialog";
 
 import Container from "../../components/container";
 
-import { AppContext } from "../../context";
-
 export default function ServicesPage() {
-  const { state, dispatch } = useContext(AppContext);
-
-  const props = {
-    employees: [],
-    service_categories: [],
-  };
-
-  const [serviceCategories, setServiceCategories] = useState(
-    state.serviceCategory.data
+  const dispatch = useDispatch();
+  const { employment, serviceCategory } = useSelector(
+    ({ employment, serviceCategory }) => ({
+      employment,
+      serviceCategory,
+    })
   );
 
   const [data, setData] = useState({
-    employee: {},
+    employment: {},
     addStep: 0,
     service: 0,
     newCategory: { open: false, name: "", parent: "" },
   });
 
-  const setFirstEmployee = () => {
-    if (!!props.employees.length) {
-      setData({ ...data, employee: props.employees[0] });
+  const setFirstEmployment = () => {
+    if (!!employment.data.length) {
+      setData({ ...data, employment: employment.data[0] });
     }
   };
 
   useEffect(() => {
-    dispatch("@serviceCategory/SERVICE_CATEGORIES_REQUEST");
+    dispatch(ServiceCategoryActions.serviceCategoriesRequest());
+    dispatch(EmploymentActions.employmentsRequest());
   }, []);
 
-  useEffect(() => {
-    setServiceCategories(state.serviceCategory.data);
-  }, [state.serviceCategory.data]);
+  console.log(employment);
+  console.log(serviceCategory);
 
   return (
     <Container>
       <SiteHeader></SiteHeader>
 
       <Header
-        employee={data.employee}
+        employment={data.employment}
         showBack={data.addStep > 0}
         backAction={() => setData({ ...data, addStep: 0 })}
         addService={() => setData({ ...data, addStep: 1 })}
@@ -74,28 +71,54 @@ export default function ServicesPage() {
 
       {data.addStep === 0 && (
         <React.Fragment>
-          {!!props.employees.length && (
-            <Employees
-              data={props.employees}
-              employee={data.employee}
-              setEmployee={(e) => setData({ ...data, employee: e })}
+          {!!employment.fetching && (
+            <Grid
+              container
+              justify="center"
+              alignItems="center"
+              className="margin-b-4"
+            >
+              <CircularProgress color="default" />
+            </Grid>
+          )}
+
+          {!!!employment.fetching && !!employment.data.length && (
+            <Employments
+              data={employment.data}
+              employment={data.employment}
+              setEmployee={(e) => setData({ ...data, employment: e })}
             />
           )}
-          <ServiceCategories
-            data={serviceCategories}
-            employee={data.employee}
-            setEmployee={(e) => {
-              if (!!!e.service_categories) {
-                setData({
-                  ...data,
-                  employee: props.employees.find((item) => item.id === e.id),
-                });
-              } else {
-                setData({ ...data, employee: e });
-              }
-            }}
-            setFirstEmployee={setFirstEmployee}
-          />
+
+          {!!serviceCategory.fetching && (
+            <Grid
+              container
+              justify="center"
+              alignItems="center"
+              className="margin-t-4"
+            >
+              <CircularProgress color="default" />
+            </Grid>
+          )}
+          {!!!serviceCategory.fetching && (
+            <ServiceCategories
+              data={serviceCategory.data}
+              employment={data.employment}
+              setEmployee={(e) => {
+                if (!!!e.service_categories) {
+                  setData({
+                    ...data,
+                    employment: employment.data.find(
+                      (item) => item.id === e.id
+                    ),
+                  });
+                } else {
+                  setData({ ...data, employment: e });
+                }
+              }}
+              setFirstEmployment={setFirstEmployment}
+            />
+          )}
         </React.Fragment>
       )}
 

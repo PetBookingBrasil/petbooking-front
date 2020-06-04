@@ -4,27 +4,27 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 
-import { Employee, ImageWrapper, Count, Initials } from "./styles";
+import { Employment, ImageWrapper, Count, Initials } from "./styles";
 
-function Employees(props) {
+export default function Employments(props) {
   return (
-    <Grid container spacing={3} alignItems="center">
+    <Grid container alignItems="center">
       <Grid item md={2}>
         <Button
           variant="contained"
           fullWidth
-          className={!!!props.employee.id ? "sns-active" : "sns-inactive"}
-          onClick={() => props.setEmployee({})}
+          className={!!!props.employment.id ? "sns-active" : "sns-inactive"}
+          onClick={() => props.setEmployment({})}
         >
           Ver todos
         </Button>
       </Grid>
       <Grid item md={10} className="d-flex o-auto">
         {props.data.map((item, i) => (
-          <Employee
+          <Employment
             key={i}
-            active={props.employee.id === item.id}
-            onClick={() => props.setEmployee(item)}
+            active={props.employment.id === item.id}
+            onClick={() => props.setEmployment(item)}
           >
             <ImageWrapper>
               <Count>
@@ -40,11 +40,9 @@ function Employees(props) {
               )}
             </ImageWrapper>
             <Typography variant="caption">{item.name}</Typography>
-          </Employee>
+          </Employment>
         ))}
       </Grid>
     </Grid>
   );
 }
-
-export default (props) => <Employees {...props} />;

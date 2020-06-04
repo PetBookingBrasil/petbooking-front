@@ -14,10 +14,17 @@ import { Component, SkillBtn, ImageWrapper, Initials } from "./styles";
 
 export default function ServiceItem({
   data,
-  setFirstEmployee,
-  setEmployee,
+  setFirstEmployment,
+  setEmployment,
   editItem,
 }) {
+  const price = !!data.price
+    ? data.price.toLocaleString("pt-br", {
+        style: "currency",
+        currency: "BRL",
+      })
+    : "não configurado";
+
   return (
     <Component item md={12}>
       <Grid container spacing={3} alignItems="center">
@@ -28,23 +35,15 @@ export default function ServiceItem({
             </Grid>
             <Grid item md={2} className="d-flex align-center">
               <AttachMoney className="margin-r-2" />
-              <Typography variant="caption">
-                {data.price_formatted !== "R$ 0,00"
-                  ? data.price_formatted
-                  : "não configurado"}
-              </Typography>
+              <Typography variant="caption">{price}</Typography>
             </Grid>
             <Grid item md={2} className="d-flex align-center">
               <Schedule className="margin-r-2" />
-              <Typography variant="caption">
-                {data.duration_formatted !== "zero"
-                  ? data.duration_formatted
-                  : "não configurado"}
-              </Typography>
+              <Typography variant="caption">{data.duration}</Typography>
             </Grid>
             <Grid item md={2} className="d-flex align-center o-auto">
               {!!data.employments && !!!data.employments.length && (
-                <SkillBtn onClick={() => setFirstEmployee()}>
+                <SkillBtn onClick={() => setFirstEmployment()}>
                   <Typography variant="caption">
                     configurar habilidades
                   </Typography>
@@ -56,7 +55,7 @@ export default function ServiceItem({
                   <Tooltip
                     title={item.name}
                     key={item.id}
-                    onClick={() => setEmployee(item)}
+                    onClick={() => setEmployment(item)}
                   >
                     <ImageWrapper className="margin-r-2">
                       {item.avatar_url.includes("fallback") ? (

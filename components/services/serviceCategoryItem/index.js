@@ -10,8 +10,8 @@ import { Component } from "./styles";
 export default function ServiceCategoryItem({
   data,
   employee,
-  setEmployee,
-  setFirstEmployee,
+  setEmployment,
+  setFirstEmployment,
   subItem,
   editItem,
 }) {
@@ -22,11 +22,12 @@ export default function ServiceCategoryItem({
           <Typography variant="body1">{data.name}</Typography>
         </Grid>
       </Grid>
-      {data.services.map((item) => (
+      {data.services.map((item, i) => (
         <ServiceItem
+          key={i}
           data={item}
-          setFirstEmployee={setFirstEmployee}
-          setEmployee={setEmployee}
+          setFirstEmployment={setFirstEmployment}
+          setEmployment={setEmployment}
           editItem={editItem}
         />
       ))}

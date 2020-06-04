@@ -6,8 +6,14 @@ module.exports = {
   },
   exportPathMap: async function () {
     return {
-      "/": { page: "/services" },
-      "/services": { page: "/services" },
+      "/": {
+        page: "/services",
+        query: { token: "", business_id: "", consumer_uuid: "" },
+      },
+      "/services": {
+        page: "/services",
+        query: { token: "", business_id: "", consumer_uuid: "" },
+      },
     };
   },
 };

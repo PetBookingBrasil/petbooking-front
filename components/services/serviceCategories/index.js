@@ -18,9 +18,9 @@ import CustomDialog from "../customDialog";
 
 export default function ServiceCategories({
   data,
-  employee,
-  setEmployee,
-  setFirstEmployee,
+  employment,
+  setEmployment,
+  setFirstEmployment,
 }) {
   const [state, setState] = useState({
     currentService: {},
@@ -38,9 +38,9 @@ export default function ServiceCategories({
         <ServiceCategoryItem
           key={item.id}
           data={item}
-          employee={employee}
-          setEmployee={setEmployee}
-          setFirstEmployee={setFirstEmployee}
+          employment={employment}
+          setEmployment={setEmployment}
+          setFirstEmployment={setFirstEmployment}
           subItem
           editItem={(item) => {
             setState({
@@ -54,7 +54,7 @@ export default function ServiceCategories({
 
       <CustomDialog
         header={`Editando ${state.currentService.name} ${
-          !!employee.id ? "para " + employee.name : ""
+          !!employment.id ? "para " + employment.name : ""
         }`}
         open={state.editModalOpen}
         onClose={() => setState({ ...state, editModalOpen: false })}
