@@ -2,7 +2,8 @@ import { takeLatest, call, put, all, select } from "redux-saga/effects";
 import { toast } from "react-toastify";
 import api from "../../services/api";
 import ServiceActions from "../reducers/service";
-import { ServiceSelectors } from "../reducers/service";
+import ServiceCategoryActions from "../reducers/serviceCategory";
+import ServicePriceRuleActions from "../reducers/servicePriceRule";
 
 export function* index({ data }) {
   const response = yield call(api.services, data);
@@ -18,7 +19,10 @@ export function* create({ data }) {
   if (response.ok) {
     toast.success("Serviço criado com sucesso!");
     yield put(ServiceActions.setStep(0));
+    yield put(ServiceCategoryActions.serviceCategoriesRequest());
     yield put(ServiceActions.createServiceSuccess(response.data));
+
+    yield put(ServicePriceRuleActions.updatePricesRequest(data.rules[0]));
   } else {
     toast.error(
       "Ops, ocorreu um erro ao criar seu serviço, por favor, tente novamente"

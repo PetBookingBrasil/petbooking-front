@@ -52,21 +52,27 @@ export default function ServiceForm({ newService, services, categories }) {
       { x: ["Pequeno", "Médio", "Grande", "Gigante"] },
       { y: ["Curto", "Médio", "Longo"] },
     ],
-    priceBreedOpen: true,
-    priceSizeOpen: true,
-    fiscalOpen: true,
+    rulesOpen: [],
   });
-
-  const [breeds, setBreeds] = useState([
-    { slug: "pinscher", name: "Affenpinchser" },
-    { slug: "dog", name: "Alemao" },
-    { slug: "adaiw", name: "AShduahduw" },
-    { slug: "pinscdaiwjd", name: "PianduaduUs" },
-  ]);
+  const [rules, setRules] = useState([]);
 
   useEffect(() => {
-    //dispatch(ServicePriceRuleActions.rulesRequest());
+    dispatch(ServicePriceRuleActions.rulesRequest());
+    //dispatch(ServicePriceRuleActions.pricesRequest());
+    dispatch(ServicePriceRuleActions.breedsRequest("dog"));
   }, []);
+
+  useEffect(() => {
+    setState({
+      ...state,
+      rulesOpen: servicePriceRule.data.map((item) => false),
+    });
+    setRules(servicePriceRule.data);
+  }, [servicePriceRule.data]);
+
+  useEffect(() => {
+    dispatch(ServicePriceRuleActions.breedsRequest(state.petKind));
+  }, [state.petKind]);
 
   const handleSave = () => {
     if (!!service.saving) return;
@@ -75,7 +81,116 @@ export default function ServiceForm({ newService, services, categories }) {
       toast.error("Verifique os campos obrigatórios, por favor");
       return;
     }
-    dispatch(ServiceActions.createServiceRequest(state));
+    dispatch(ServiceActions.createServiceRequest({ ...state, rules }));
+  };
+
+  const handleServicePriceChange = (item, value) => {
+    const newChanged = [...changedPrices];
+    const exists = !!newChanged.find((inner) => item.id === inner.id);
+
+    if (exists) {
+      newChanged.map((inner) =>
+        item.id === inner.id ? { ...inner, price: value } : inner
+      );
+      setChangedPrices(newChanged);
+    } else {
+      setChangedPrices([...newChanged, { ...item, price: value }]);
+    }
+  };
+
+  const CombinationRows = ({ rule, isBreed }) => {
+    const newCombinations = [...rule.service_price_combinations];
+
+    const rows = [],
+      size = rule.service_price_variations[0].variations.length;
+
+    while (newCombinations.length > 0)
+      rows.push(newCombinations.splice(0, size));
+
+    return rows.map((item, i) => {
+      // const breed =
+      //   !!isBreed && servicePriceRule.breeds.length
+      //     ? servicePriceRule.breeds.find(
+      //         (breed) => breed.id === item.slug.split("-")[0]
+      //       )
+      //     : {};
+
+      return (
+        <Grid item>
+          <Grid container justify="center" alignItems="center" spacing={1}>
+            <Grid item xs={1}>
+              <Typography variant="body2">
+                {isBreed
+                  ? breed.name
+                  : rule.service_price_variations[1].variations[i]}
+              </Typography>
+            </Grid>
+
+            {!isBreed &&
+              item.map((inner, j) => (
+                <Grid
+                  item
+                  xs={parseInt(
+                    11 / rule.service_price_variations[0].variations.length
+                  )}
+                >
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    value={parseFloat(inner.business_service_price.price)}
+                    onChange={(e) => {
+                      setRules(
+                        rules.map((r) =>
+                          r.id === rule.id
+                            ? {
+                                ...r,
+                                service_price_combinations: r.service_price_combinations.map(
+                                  (c) =>
+                                    c.id === inner.id
+                                      ? {
+                                          ...c,
+                                          business_service_price: {
+                                            ...c.business_service_price,
+                                            price: e.target.value,
+                                          },
+                                        }
+                                      : c
+                                ),
+                              }
+                            : r
+                        )
+                      );
+                    }}
+                  />
+                </Grid>
+              ))}
+
+            {!!isBreed &&
+              item
+                .filter((inner) => inner.slug)
+                .map((inner, j) => (
+                  <Grid
+                    item
+                    xs={parseInt(
+                      11 / rule.service_price_variations[0].variations.length
+                    )}
+                  >
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      value={
+                        !!inner.business_service_price
+                          ? inner.business_service_price.price
+                          : 0
+                      }
+                      onChange={() => {}}
+                    />
+                  </Grid>
+                ))}
+          </Grid>
+        </Grid>
+      );
+    });
   };
 
   return (
@@ -193,320 +308,185 @@ export default function ServiceForm({ newService, services, categories }) {
         </Grid>
       </Grid>
 
-      <Grid container className="margin-b-4">
-        <CollapseTitle container justify="space-between" alignItems="center">
-          <Typography variant="body2">
-            Variação de preço: Raça e pelagem
-          </Typography>
-          <IconButton
-            onClick={() =>
-              setState({ ...state, priceBreedOpen: !state.priceBreedOpen })
-            }
-          >
-            {!!state.priceBreedOpen ? <ExpandLess /> : <ExpandMore />}
-          </IconButton>
-        </CollapseTitle>
-        <CollapseBody in={state.priceBreedOpen}>
-          <Grid container direction="column">
-            <Grid
+      {rules
+        .filter(
+          (item) =>
+            !item.service_price_variations.some(
+              (inner) => inner.kind === "breed"
+            )
+        )
+        .map((item, i) => (
+          <Grid container className="margin-b-4" key={i}>
+            <CollapseTitle
               container
               justify="space-between"
               alignItems="center"
-              spacing={6}
             >
-              <Grid item xs={6}>
-                <InputLabel className="margin-b-0">Tipo</InputLabel>
-                <Select
-                  fullWidth
-                  defaultValue="dog"
-                  variant="outlined"
-                  value={state.petKind}
-                  onChange={(e) =>
-                    setState({ ...state, petKind: e.target.value })
-                  }
+              <Typography variant="body2">
+                Variação de preço: {item.name}
+              </Typography>
+              <IconButton
+                onClick={() =>
+                  setState({
+                    ...state,
+                    rulesOpen: state.rulesOpen.map((inner, j) =>
+                      i === j ? !inner : inner
+                    ),
+                  })
+                }
+              >
+                {!!state.rulesOpen[i] ? <ExpandLess /> : <ExpandMore />}
+              </IconButton>
+            </CollapseTitle>
+            <CollapseBody in={state.rulesOpen[i]}>
+              <Grid container direction="column">
+                <Grid
+                  container
+                  direction="column"
+                  spacing={1}
+                  className="margin-t-5"
                 >
-                  <MenuItem value="dog">Cachorro</MenuItem>
-                  <MenuItem value="cat">Gato</MenuItem>
-                  <MenuItem value="pig">Porco</MenuItem>
-                </Select>
-              </Grid>
-              <Grid item xs={6}>
-                <InputLabel className="margin-b-0">Raça</InputLabel>
-                <Select
-                  multiple
-                  value={state.breeds}
-                  onChange={(e) =>
-                    setState({
-                      ...state,
-                      breeds: e.target.value,
-                    })
-                  }
-                  variant="outlined"
-                  fullWidth
-                  renderValue={(selected) => (
-                    <Grid container wrap="wrap">
-                      {selected.map((value) => (
-                        <Chip key={value} label={value.name} className="m-1" />
-                      ))}
+                  {item.service_price_variations.some(
+                    (inner) => inner.kind === "breed"
+                  ) && (
+                    <>
+                      <Grid
+                        container
+                        justify="space-between"
+                        alignItems="center"
+                        spacing={6}
+                      >
+                        <Grid item xs={6}>
+                          <InputLabel className="margin-b-0">Tipo</InputLabel>
+                          <Select
+                            fullWidth
+                            defaultValue="dog"
+                            variant="outlined"
+                            value={state.petKind}
+                            onChange={(e) =>
+                              setState({ ...state, petKind: e.target.value })
+                            }
+                          >
+                            <MenuItem value="dog">Cachorro</MenuItem>
+                            <MenuItem value="cat">Gato</MenuItem>
+                            <MenuItem value="pig">Porco</MenuItem>
+                          </Select>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <InputLabel className="margin-b-0">Raça</InputLabel>
+                          <Select
+                            multiple
+                            value={state.breeds}
+                            onChange={(e) => {
+                              console.log(e.target.value);
+
+                              setState({
+                                ...state,
+                                breeds: [
+                                  ...state.breeds,
+                                  e.target.value,
+                                ].flat(),
+                              });
+                            }}
+                            variant="outlined"
+                            fullWidth
+                            renderValue={(selected) => (
+                              <Grid container wrap="wrap">
+                                {selected.map((value) => (
+                                  <Chip
+                                    key={value}
+                                    label={value.name}
+                                    className="m-1"
+                                    onClick={() =>
+                                      setState({
+                                        ...state,
+                                        breeds: state.breeds.filter(
+                                          (inner) => inner.slug !== value.slug
+                                        ),
+                                      })
+                                    }
+                                  />
+                                ))}
+                              </Grid>
+                            )}
+                          >
+                            {servicePriceRule.breeds.map((item) => (
+                              <MenuItem key={item.id} value={item}>
+                                {item.name}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </Grid>
+                      </Grid>
+                      <Grid item className="margin-t-2">
+                        <Grid
+                          container
+                          justify="center"
+                          alignItems="center"
+                          spacing={3}
+                        >
+                          <Grid item xs={1}></Grid>
+                          {item.service_price_variations[1].variations.map(
+                            (inner, j) => (
+                              <Grid
+                                item
+                                xs={parseInt(
+                                  11 /
+                                    item.service_price_variations[1].variations
+                                      .length
+                                )}
+                                className="flex-1"
+                              >
+                                <Typography variant="body2">{inner}</Typography>
+                              </Grid>
+                            )
+                          )}
+                        </Grid>
+                      </Grid>
+                    </>
+                  )}
+
+                  {!item.service_price_variations.some(
+                    (inner) => inner.kind === "breed"
+                  ) && (
+                    <Grid item>
+                      <Grid
+                        container
+                        justify="center"
+                        alignItems="center"
+                        spacing={3}
+                      >
+                        <Grid item xs={1}></Grid>
+                        {item.service_price_variations[0].variations.map(
+                          (inner, j) => (
+                            <Grid
+                              item
+                              xs={parseInt(
+                                11 /
+                                  item.service_price_variations[0].variations
+                                    .length
+                              )}
+                              className="flex-1"
+                            >
+                              <Typography variant="body2">{inner}</Typography>
+                            </Grid>
+                          )
+                        )}
+                      </Grid>
                     </Grid>
                   )}
-                >
-                  {breeds.map((item) => (
-                    <MenuItem key={item.slug} value={item}>
-                      {item.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </Grid>
-            </Grid>
 
-            <Grid
-              container
-              direction="column"
-              spacing={1}
-              className="margin-t-5"
-            >
-              {state.breeds.map((item) => (
-                <Grid item>
-                  <Grid container spacing={1}>
-                    <Grid item xs={1} className="margin-r-2">
-                      {item.name}
-                    </Grid>
-                    <Grid item>
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                        value=""
-                        onChange={() => {}}
-                        InputProps={{
-                          inputComponent: MoneyMask,
-                        }}
-                      />
-                    </Grid>
-                    <Grid item>
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                        value=""
-                        onChange={() => {}}
-                        InputProps={{
-                          inputComponent: MoneyMask,
-                        }}
-                      />
-                    </Grid>
-                    <Grid item>
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                        value=""
-                        onChange={() => {}}
-                        InputProps={{
-                          inputComponent: MoneyMask,
-                        }}
-                      />
-                    </Grid>
-                    <Grid item>
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                        value=""
-                        onChange={() => {}}
-                        InputProps={{
-                          inputComponent: MoneyMask,
-                        }}
-                      />
-                    </Grid>
-                    <Grid item xs={1}>
-                      <Button variant="contained">
-                        <Remove fontSize="small" />
-                      </Button>
-                    </Grid>
-                  </Grid>
+                  <CombinationRows
+                    rule={item}
+                    isBreed={item.service_price_variations.some(
+                      (inner) => inner.kind === "breed"
+                    )}
+                  />
                 </Grid>
-              ))}
-            </Grid>
+              </Grid>
+            </CollapseBody>
           </Grid>
-        </CollapseBody>
-      </Grid>
-
-      <Grid container className="margin-b-4">
-        <CollapseTitle container justify="space-between" alignItems="center">
-          <Typography variant="body2">
-            Variação de preço: Porte e pelagem
-          </Typography>
-          <IconButton
-            onClick={() =>
-              setState({ ...state, priceSizeOpen: !state.priceSizeOpen })
-            }
-          >
-            {!!state.priceSizeOpen ? <ExpandLess /> : <ExpandMore />}
-          </IconButton>
-        </CollapseTitle>
-        <CollapseBody in={state.priceSizeOpen}>
-          <Grid container direction="column">
-            <Grid
-              container
-              direction="column"
-              spacing={1}
-              className="margin-t-5"
-            >
-              <Grid item>
-                <Grid container spacing={3}>
-                  <Grid item xs={1}></Grid>
-                  <Grid item className="flex-1">
-                    <Typography variant="body2">Pequeno</Typography>
-                  </Grid>
-                  <Grid item className="flex-1">
-                    <Typography variant="body2">Médio</Typography>
-                  </Grid>
-                  <Grid item className="flex-1">
-                    <Typography variant="body2">Grande</Typography>
-                  </Grid>
-                  <Grid item className="flex-1">
-                    <Typography variant="body2">Gigante</Typography>
-                  </Grid>
-                  <Grid item xs={1}></Grid>
-                </Grid>
-              </Grid>
-
-              <Grid item>
-                <Grid container spacing={1}>
-                  <Grid item xs={1}>
-                    <Typography variant="body2">Curto</Typography>
-                  </Grid>
-                  <Grid item>
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      value=""
-                      onChange={() => {}}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      value=""
-                      onChange={() => {}}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      value=""
-                      onChange={() => {}}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      value=""
-                      onChange={() => {}}
-                    />
-                  </Grid>
-                  <Grid item xs={1}>
-                    <Button variant="contained">
-                      <Remove fontSize="small" />
-                    </Button>
-                  </Grid>
-                </Grid>
-              </Grid>
-
-              <Grid item>
-                <Grid container spacing={1}>
-                  <Grid item xs={1}>
-                    <Typography variant="body2">Médio</Typography>
-                  </Grid>
-                  <Grid item>
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      value=""
-                      onChange={() => {}}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      value=""
-                      onChange={() => {}}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      value=""
-                      onChange={() => {}}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      value=""
-                      onChange={() => {}}
-                    />
-                  </Grid>
-                  <Grid item xs={1}>
-                    <Button variant="contained">
-                      <Remove fontSize="small" />
-                    </Button>
-                  </Grid>
-                </Grid>
-              </Grid>
-
-              <Grid item>
-                <Grid container spacing={1}>
-                  <Grid item xs={1}>
-                    <Typography variant="body2">Longo</Typography>
-                  </Grid>
-                  <Grid item>
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      value=""
-                      onChange={() => {}}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      value=""
-                      onChange={() => {}}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      value=""
-                      onChange={() => {}}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      value=""
-                      onChange={() => {}}
-                    />
-                  </Grid>
-                  <Grid item xs={1}>
-                    <Button variant="contained">
-                      <Remove fontSize="small" />
-                    </Button>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-        </CollapseBody>
-      </Grid>
+        ))}
 
       <Grid container className="margin-b-4">
         <CollapseTitle container justify="space-between" alignItems="center">

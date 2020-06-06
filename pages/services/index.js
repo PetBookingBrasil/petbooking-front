@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import EmploymentActions from "../../store/reducers/employment";
 import ServiceCategoryActions from "../../store/reducers/serviceCategory";
 import ServiceActions from "../../store/reducers/service";
+import ServicePriceRuleActions from "../../store/reducers/servicePriceRule";
 
 import Divider from "@material-ui/core/Divider";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -29,11 +30,17 @@ import Container from "../../components/container";
 
 export default function ServicesPage() {
   const dispatch = useDispatch();
-  const { employment, service, serviceCategory } = useSelector(
-    ({ employment, service, serviceCategory }) => ({
+  const {
+    employment,
+    service,
+    serviceCategory,
+    servicePriceRule,
+  } = useSelector(
+    ({ employment, service, serviceCategory, servicePriceRule }) => ({
       employment,
       serviceCategory,
       service,
+      servicePriceRule,
     })
   );
 
@@ -130,14 +137,15 @@ export default function ServicesPage() {
               employment={data.employment}
               setEmployment={(e) => {
                 setData({ ...data, employment: e });
-                if (!!!e.id)
+                if (!!!e.id) {
                   dispatch(
                     ServiceCategoryActions.setMeta({
                       ...serviceCategory.meta,
                       page: 1,
                     })
                   );
-                dispatch(ServiceCategoryActions.serviceCategoriesRequest());
+                  dispatch(ServiceCategoryActions.serviceCategoriesRequest());
+                }
               }}
             />
           )}

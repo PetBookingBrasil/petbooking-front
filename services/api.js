@@ -100,8 +100,30 @@ const createServiceCategory = (params) =>
 const rules = () =>
   api.get("api/v3/service_price_rules", {
     application: "petbooking",
+    business_id: getBusinessId(),
   });
 
+const prices = () =>
+  api.get("api/v3/business_service_prices", {
+    application: "petbooking",
+    business_id: getBusinessId(),
+  });
+
+const breeds = (kind) =>
+  api.get(`api/v2/breeds/${kind}`, {
+    "page[number]": 1,
+    "page[size]": 250,
+  });
+
+const updatePrices = (rule) => {
+  const prices = rule.service_price_combinations.map(
+    (item) => item.business_service_price
+  );
+
+  return api.put("api/v3/business_service_prices", {
+    business_service_prices: prices,
+  });
+};
 const requests = {
   setConsumerToken,
   employments,
@@ -110,6 +132,9 @@ const requests = {
   serviceCategories,
   createServiceCategory,
   rules,
+  prices,
+  breeds,
+  updatePrices,
 };
 
 export default requests;
