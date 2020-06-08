@@ -124,6 +124,22 @@ const updatePrices = (rule) => {
     business_service_prices: prices,
   });
 };
+
+const updateService = (state) => {
+  const {
+    currentService
+  } = state
+  
+  const params = {
+    id: currentService.id,
+    service: {
+      comission_percentage: state.comission
+    }
+  }
+  
+  return api.put("api/v3/services", params);
+};
+
 const requests = {
   setConsumerToken,
   employments,
@@ -135,6 +151,7 @@ const requests = {
   prices,
   breeds,
   updatePrices,
+  updateService
 };
 
 export default requests;
