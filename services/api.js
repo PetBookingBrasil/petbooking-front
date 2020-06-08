@@ -6,7 +6,7 @@ export const getConsumerUuid = () => localStorage.getItem("@pb/consumerUuid");
 export const getConsumerToken = () => localStorage.getItem("@pb/consumerToken");
 
 const api = apisauce.create({
-  baseURL: "http://localhost:3000/",
+  baseURL: "http://localhost:3002/",
   timeout: 30000,
   headers: {
     "Content-Type": "application/vnd.api+json",

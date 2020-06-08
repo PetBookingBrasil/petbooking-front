@@ -101,7 +101,7 @@ export default function ServicesPage() {
   return (
     <Container>
       <Head>
-        <title>Serviços e habilidades</title>
+        <title>Serviços e habilidades - Pet Booking</title>
       </Head>
 
       <SiteHeader></SiteHeader>
