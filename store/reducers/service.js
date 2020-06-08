@@ -10,6 +10,9 @@ const { Types, Creators } = createActions({
   servicesFailure: ["data"],
   createServiceRequest: ["data"],
   createServiceSuccess: ["data"],
+  updateServiceRequest: ["data"],
+  updateServiceSuccess: ["data"],
+  updateServiceFailure: ["data"],
   createServiceFailure: ["data"],
 });
 
@@ -64,7 +67,22 @@ export const createServiceSuccess = (state, { data }) =>
     draft.saving = false;
   });
 
+export const updateServiceRequest = (state, { data }) =>
+  produce(state, (draft) => {
+    draft.saving = true;
+  });
+
+export const updateServiceSuccess = (state, { data }) =>
+  produce(state, (draft) => {
+    draft.saving = false;
+  });
+
 export const createServiceFailure = (state, { data }) =>
+  produce(state, (draft) => {
+    draft.saving = false;
+  });
+
+export const updateServiceFailure = (state, { data }) =>
   produce(state, (draft) => {
     draft.saving = false;
   });
@@ -79,4 +97,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.CREATE_SERVICE_REQUEST]: createServiceRequest,
   [Types.CREATE_SERVICE_SUCCESS]: createServiceSuccess,
   [Types.CREATE_SERVICE_FAILURE]: createServiceFailure,
+  [Types.UPDATE_SERVICE_REQUEST]: updateServiceRequest,
+  [Types.UPDATE_SERVICE_SUCCESS]: updateServiceSuccess,
+  [Types.UPDATE_SERVICE_FAILURE]: updateServiceFailure,
 });
