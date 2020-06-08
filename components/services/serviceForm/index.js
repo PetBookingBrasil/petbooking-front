@@ -23,7 +23,7 @@ import Remove from "@material-ui/icons/Remove";
 
 import { CollapseTitle, CollapseBody } from "./styles";
 
-import { DaysMask, MoneyMask, DurationMask } from "../../../helpers/Masks";
+import { DaysMask, MoneyMask, DurationMask } from "../../../helpers/masks";
 
 export default function ServiceForm({ newService, services, categories }) {
   const dispatch = useDispatch();
