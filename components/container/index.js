@@ -200,9 +200,6 @@ export default function Container({ children }) {
             <Typography variant="body2" className="margin-l-0">
               {user.name}
             </Typography>
-            <NavIcon>
-              <img src="/menu-icon-exit.svg" alt="" />
-            </NavIcon>
           </Name>
         </AvatarWrapper>
         <NavBody>
