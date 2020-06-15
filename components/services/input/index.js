@@ -3,7 +3,7 @@ import React from "react";
 import { Grid, TextField } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 
-export default function ServiceInput({ categories, setCategory }) {
+export default function Input({ categories, setCategory }) {
   return (
     <Grid
       container

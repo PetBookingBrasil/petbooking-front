@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import EmploymentActions from "../../store/reducers/employment";
 import ServiceCategoryActions from "../../store/reducers/serviceCategory";
 import ServiceActions from "../../store/reducers/service";
-import ServicePriceRuleActions from "../../store/reducers/servicePriceRule";
 
 import Divider from "@material-ui/core/Divider";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -21,26 +20,20 @@ import SiteHeader from "../../components/header";
 
 import Header from "../../components/services/header";
 import Employments from "../../components/services/employments";
-import ServiceCategories from "../../components/services/serviceCategories";
-import ServiceInput from "../../components/services/serviceInput";
-import ServiceForm from "../../components/services/serviceForm";
+import ServiceCategories from "../../components/services/categories";
+import ServiceInput from "../../components/services/input";
+import ServiceForm from "../../components/services/form";
 import CustomDialog from "../../components/services/customDialog";
 
 import Container from "../../components/container";
 
 export default function ServicesPage() {
   const dispatch = useDispatch();
-  const {
-    employment,
-    service,
-    serviceCategory,
-    servicePriceRule,
-  } = useSelector(
-    ({ employment, service, serviceCategory, servicePriceRule }) => ({
+  const { employment, service, serviceCategory } = useSelector(
+    ({ employment, service, serviceCategory }) => ({
       employment,
       serviceCategory,
       service,
-      servicePriceRule,
     })
   );
 
@@ -61,6 +54,7 @@ export default function ServicesPage() {
 
     dispatch(ServiceCategoryActions.serviceCategoriesRequest());
     dispatch(ServiceActions.servicesRequest());
+    dispatch(ServiceActions.petKindsRequest());
     dispatch(EmploymentActions.employmentsRequest());
     return () => {
       document.removeEventListener("scroll", trackScrolling);
@@ -113,7 +107,7 @@ export default function ServicesPage() {
         addService={() => dispatch(ServiceActions.setStep(1))}
         addCategory={() => setData({ ...data, newCategory: { open: true } })}
         step={service.step}
-        service={data.service}
+        service={data.newService}
       />
 
       <Divider className="margin-t-3 margin-b-3" />
@@ -164,6 +158,17 @@ export default function ServicesPage() {
               }
             }}
             setFirstEmployment={setFirstEmployment}
+            editService={(_service, category) => {
+              setData({
+                ...data,
+                newService: {
+                  ...data.newService,
+                  ..._service,
+                  category: category,
+                },
+              });
+              dispatch(ServiceActions.setStep(service.step + 2));
+            }}
           />
 
           {!!serviceCategory.fetching && (
@@ -185,7 +190,7 @@ export default function ServicesPage() {
           setCategory={(e) => {
             setData({
               ...data,
-              newService: { ...data.newService, category: e },
+              newService: { category: e },
             });
             dispatch(ServiceActions.setStep(service.step + 1));
           }}

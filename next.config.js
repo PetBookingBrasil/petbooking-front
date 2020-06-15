@@ -2,7 +2,7 @@ const withImages = require("next-images");
 module.exports = {
   ...withImages(),
   env: {
-    PB_URL: "http://localhost:3000/",
+    PB_URL: "http://localhost:3001/",
   },
   exportPathMap: async function () {
     return {
