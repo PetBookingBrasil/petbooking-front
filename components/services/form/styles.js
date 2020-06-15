@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Grid from "@material-ui/core/Grid";
 import Collapse from "@material-ui/core/Collapse";
-import { Colors } from ".././../../themes";
+import { Colors } from "../../../themes";
 
 export const CollapseTitle = styled(Grid)`
   padding: 0em 1em;

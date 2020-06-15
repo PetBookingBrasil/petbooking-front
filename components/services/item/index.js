@@ -17,6 +17,7 @@ export default function ServiceItem({
   setFirstEmployment,
   setEmployment,
   editItem,
+  removeItem,
 }) {
   const price = !!data.price
     ? data.price.toLocaleString("pt-br", {
@@ -75,7 +76,7 @@ export default function ServiceItem({
           <IconButton onClick={() => editItem(data)}>
             <Edit />
           </IconButton>
-          <IconButton>
+          <IconButton onClick={() => removeItem(data)}>
             <Delete />
           </IconButton>
         </Grid>

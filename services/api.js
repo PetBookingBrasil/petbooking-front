@@ -6,7 +6,7 @@ export const getConsumerUuid = () => localStorage.getItem("@pb/consumerUuid");
 export const getConsumerToken = () => localStorage.getItem("@pb/consumerToken");
 
 const api = apisauce.create({
-  baseURL: "http://localhost:3002/",
+  baseURL: "http://localhost:3000/",
   timeout: 30000,
   headers: {
     "Content-Type": "application/vnd.api+json",
@@ -64,14 +64,94 @@ const createService = (params) => {
       service_category_id: params.category,
       description: params.description,
       ancestry: params.ancestry,
-      price: params.price,
-      cost: params.cost,
+      price:
+        typeof params.price === "number"
+          ? params.price
+          : params.price.replace("R$", ""),
+      cost:
+        typeof params.cost === "number"
+          ? params.cost
+          : params.cost.replace("R$", ""),
       iss_type: params.issType,
       duration: params.duration,
       municipal_code: params.municipalCode,
       reschedule_reminder_days_after: params.sendAfter,
       reschedule_reminder_message: params.sendAfterMessage,
     },
+  });
+};
+
+const updateService = (params) => {
+  return api.put("api/v3/services", {
+    id: params.id,
+    service: {
+      application: "petbooking",
+      business_id: getBusinessId(),
+      name: params.name,
+      service_category_id: params.category,
+      description: params.description,
+      ancestry: params.ancestry,
+      price:
+        typeof params.price === "number"
+          ? params.price
+          : params.price.replace("R$", ""),
+      cost:
+        typeof params.cost === "number"
+          ? params.cost
+          : params.cost.replace("R$", ""),
+      iss_type: params.issType,
+      duration: params.duration,
+      municipal_code: params.municipalCode,
+      reschedule_reminder_days_after: params.sendAfter,
+      reschedule_reminder_message: params.sendAfterMessage,
+    },
+  });
+};
+
+const removeService = (id) => {
+  return api.delete("api/v3/services", {
+    id: id,
+  });
+};
+
+const petKinds = () => api.get("api/v3/pet_kinds");
+
+const createSkill = (params) => {
+  return api.post("api/v3/skills", {
+    pet_kind_ids: params.petKindIds,
+    skill: {
+      employment_id: params.employment.id,
+      service_id: params.serviceId,
+      price:
+        typeof params.price === "number"
+          ? params.price
+          : params.price.replace("R$", ""),
+      duration: params.duration,
+      comission_percentage: params.comission,
+    },
+  });
+};
+
+const updateSkill = (params) => {
+  return api.put("api/v3/skills", {
+    pet_kind_ids: params.petKindIds,
+    id: params.currentSkill.id,
+    skill: {
+      employment_id: params.employment.id,
+      service_id: params.currentService.id,
+      price:
+        typeof params.price === "number"
+          ? params.price
+          : params.price.replace("R$", ""),
+      duration: params.duration,
+      comission_percentage: params.comission,
+    },
+  });
+};
+
+const removeSkill = (id) => {
+  return api.delete("api/v3/skills", {
+    id: id,
   });
 };
 
@@ -116,28 +196,17 @@ const breeds = (kind) =>
   });
 
 const updatePrices = (rule) => {
-  const prices = rule.service_price_combinations.map(
-    (item) => item.business_service_price
-  );
+  const prices = rule.combinations.data.map((item) => ({
+    id: item.business_service_price.id,
+    price:
+      typeof item.price === "number"
+        ? item.price
+        : item.price.replace("R$", ""),
+  }));
 
   return api.put("api/v3/business_service_prices", {
     business_service_prices: prices,
   });
-};
-
-const updateService = (state) => {
-  const {
-    currentService
-  } = state
-  
-  const params = {
-    id: currentService.id,
-    service: {
-      comission_percentage: state.comission
-    }
-  }
-  
-  return api.put("api/v3/services", params);
 };
 
 const requests = {
@@ -151,7 +220,12 @@ const requests = {
   prices,
   breeds,
   updatePrices,
-  updateService
+  updateService,
+  removeService,
+  petKinds,
+  createSkill,
+  updateSkill,
+  removeSkill,
 };
 
 export default requests;

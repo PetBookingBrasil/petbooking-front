@@ -35,7 +35,15 @@ export default function Header({
           {step === 1 && <b>Adicionar serviço</b>}
           {step === 2 && (
             <b>
-              Adicionar serviço {!!service.name ? " - " + service.name : ""}
+              {!!!service.id &&
+                `Adicionar serviço ${
+                  !!service.name ? " - " + service.name : ""
+                }`}
+
+              {!!service.id &&
+                `Editando serviço ${
+                  !!service.name ? " - " + service.name : ""
+                }`}
             </b>
           )}
         </Typography>
