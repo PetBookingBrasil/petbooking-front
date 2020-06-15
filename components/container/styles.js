@@ -6,7 +6,7 @@ export const Component = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding: ${Metrics.m0};
+  padding: ${Metrics.m0} ${Metrics.m3};
   margin-left: 60px;
   margin-top: ${Metrics.m4};
 `;
@@ -83,6 +83,12 @@ export const NavBody = styled.nav`
 `;
 
 export const NavLink = styled.a`
+
+  @font-face {
+    font-family: 'CorporativeSansRd';
+    src: local('CorporativeSansRd'), url(fonts/corporative/CorporativeSansRd.woff) format('woff');
+  }
+
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -94,6 +100,14 @@ export const NavLink = styled.a`
     transition: all 0.2s cubic-bezier(0.65, 0.05, 0.36, 1) 0s;
   }
 
+  .MuiTypography-caption{
+    font-weight: 600;
+    font-size: 0.85rem;
+    font-family: "CorporativeSansRd", "Roboto", "Helvetica Neue", Arial, sans-serif;
+  }
+
+  text-decoration: none;
+
   &:nth-of-type(2),
   &:nth-of-type(3),
   &:nth-of-type(4) {
@@ -101,6 +115,10 @@ export const NavLink = styled.a`
       width: 17px;
       height: 17px;
     }
+  }
+
+  &:hover {
+    color: #FFFFFF;
   }
 `;
 

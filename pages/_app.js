@@ -1,50 +1,51 @@
+import Head from "next/head";
 import NextApp from "next/app";
 import React from "react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+import { END } from "redux-saga";
+import { wrapper } from "../store/configureStore";
+
+import Index from "./";
+
 import { ThemeProvider as StyledThemeProvider } from "styled-components";
 import {
   ThemeProvider as MaterialThemeProvider,
   createMuiTheme,
 } from "@material-ui/core/styles";
-import { GlobalStyle } from "../themes";
-
-import { Colors } from "../themes";
-import AppContextProvider from "../context/index";
-import { getConsumerToken } from "../services/consumer";
+import { GlobalStyle, Colors } from "../themes";
 
 const theme = {
   primary: Colors.primaryColor,
   ...createMuiTheme(),
 };
 
-export default class App extends NextApp {
+class App extends NextApp {
+  static getInitialProps = async ({ Component, ctx }) => {
+    // 1. Wait for all page actions to dispatch
+    const pageProps = {
+      ...(Component.getInitialProps
+        ? await Component.getInitialProps(ctx)
+        : {}),
+    };
+
+    // 2. Stop the saga if on server
+    if (ctx.req) {
+      ctx.store.dispatch(END);
+      await ctx.store.sagaTask.toPromise();
+    }
+
+    // 3. Return props
+    return {
+      pageProps,
+    };
+  };
+
   componentDidMount() {
     const jssStyles = document.querySelector("#jss-server-side");
     if (jssStyles && jssStyles.parentNode)
       jssStyles.parentNode.removeChild(jssStyles);
-
-    async function getData() {
-      let url = window.location.href;
-      if (url.includes("&")) {
-        // Save info from petbooking, for future requests
-        localStorage.setItem("@pb/token", url.split("token=")[1].split("&")[0]);
-        localStorage.setItem(
-          "@pb/businessId",
-          url.split("business_id=")[1].split("&")[0]
-        );
-        localStorage.setItem(
-          "@pb/consumerUuid",
-          url.split("consumer_uuid=")[1].split("&")[0]
-        );
-
-        let response = await getConsumerToken();
-        if (response.ok) {
-          let json = await response.json();
-          localStorage.setItem("@pb/consumerToken", json.data.attributes.token);
-        }
-      }
-    }
-
-    getData();
   }
 
   render() {
@@ -53,13 +54,21 @@ export default class App extends NextApp {
     return (
       <StyledThemeProvider theme={theme}>
         <MaterialThemeProvider theme={theme}>
-          <AppContextProvider>
-            <GlobalStyle />
-
+          <Head>
+            <link
+              href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap"
+              rel="stylesheet"
+            ></link>
+          </Head>
+          <ToastContainer autoClose={3000} />
+          <GlobalStyle />
+          <Index>
             <Component {...pageProps} />
-          </AppContextProvider>
+          </Index>
         </MaterialThemeProvider>
       </StyledThemeProvider>
     );
   }
 }
+
+export default wrapper.withRedux(App);

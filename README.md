@@ -1,22 +1,34 @@
 Petbooking front
 
-## Getting Started
+- NextJS
+- React
 
-First, run the development server:
+- Material UI
+- Styled Components
+
+- Redux
+- Redux Saga
+
+## Como iniciar o ambiente de desenvolvimento
 
 ```bash
-npm run dev
-# or
+yarn
+# depois
 yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abra o navegador em [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## Estrutura
 
-## Learn More
+- Componentes gerais: /components
+- Páginas: /pages
+- Redux: /store/reducers
+- Redux Saga: /store/sagas
+- Temas, métricas, etc: /themes
+- API: /services/api
+- Helpers gerais: /helpers
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+* [Documentação Next.js](https://nextjs.org/docs)
+* [Documentação Material UI](https://material-ui.com/)
+* [Documentação Styled Components](https://styled-components.com/docs)

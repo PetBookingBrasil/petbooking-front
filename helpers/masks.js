@@ -1,6 +1,6 @@
-import React from 'react';
-import MaskedInput from 'react-text-mask';
-import createNumberMask from 'text-mask-addons/dist/createNumberMask';
+import React from "react";
+import MaskedInput from "react-text-mask";
+import createNumberMask from "text-mask-addons/dist/createNumberMask";
 
 export function DaysMask(props) {
   const { inputRef, ...other } = props;
@@ -11,7 +11,7 @@ export function DaysMask(props) {
         inputRef(ref ? ref.inputElement : null);
       }}
       mask={daysMask}
-      placeholderChar={'\u2000'}
+      placeholderChar={"\u2000"}
       showMask
     />
   );
@@ -19,6 +19,7 @@ export function DaysMask(props) {
 
 export function MoneyMask(props) {
   const { inputRef, ...other } = props;
+  const value = !!props.value ? props.value : "";
   return (
     <MaskedInput
       {...other}
@@ -26,8 +27,9 @@ export function MoneyMask(props) {
         inputRef(ref ? ref.inputElement : null);
       }}
       mask={numberMask}
-      placeholderChar={'\u2000'}
+      placeholderChar={"\u2000"}
       showMask
+      value={value}
     />
   );
 }
@@ -41,17 +43,17 @@ export function DurationMask(props) {
         inputRef(ref ? ref.inputElement : null);
       }}
       mask={durationMask}
-      placeholderChar={'\u2000'}
+      placeholderChar={"\u2000"}
       showMask
     />
   );
 }
 
-const daysMask = [/\d/, /\d/, ' dias'];
-const durationMask = [/\d/, /\d/, ':', /\d/, /\d/];
+const daysMask = [/\d/, /\d/, " dias"];
+const durationMask = [/\d/, /\d/, ":", /\d/, /\d/];
 const numberMask = createNumberMask({
-  prefix: 'R$',
-  thousandsSeparatorSymbol: '.',
-  decimalSymbol: ',',
+  prefix: "R$",
+  thousandsSeparatorSymbol: ".",
+  decimalSymbol: ",",
   allowDecimal: true,
 });

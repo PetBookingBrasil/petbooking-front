@@ -1,107 +1,209 @@
-import { useState, useContext, useEffect } from "react";
+import Head from "next/head";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import EmploymentActions from "../../store/reducers/employment";
+import ServiceCategoryActions from "../../store/reducers/serviceCategory";
+import ServiceActions from "../../store/reducers/service";
 
-import {
-  Divider,
-  DialogContent,
-  DialogActions,
-  InputLabel,
-  TextField,
-  Grid,
-  Button,
-} from "@material-ui/core";
+import Divider from "@material-ui/core/Divider";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogActions from "@material-ui/core/DialogActions";
+import InputLabel from "@material-ui/core/InputLabel";
+import TextField from "@material-ui/core/TextField";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 import SiteHeader from "../../components/header";
 
 import Header from "../../components/services/header";
-import Employees from "../../components/services/employees";
-import Services from "../../components/services/services";
-import ServiceInput from "../../components/services/serviceInput";
-import ServiceForm from "../../components/services/serviceForm";
+import Employments from "../../components/services/employments";
+import ServiceCategories from "../../components/services/categories";
+import ServiceInput from "../../components/services/input";
+import ServiceForm from "../../components/services/form";
 import CustomDialog from "../../components/services/customDialog";
 
 import Container from "../../components/container";
 
-import { AppContext } from "../../context";
-
 export default function ServicesPage() {
-  const { state, dispatch } = useContext(AppContext);
+  const dispatch = useDispatch();
+  const { employment, service, serviceCategory } = useSelector(
+    ({ employment, service, serviceCategory }) => ({
+      employment,
+      serviceCategory,
+      service,
+    })
+  );
 
-  const props = {
-    employees: [],
-    service_categories: [],
-  };
   const [data, setData] = useState({
-    employee: {},
-    addStep: 0,
+    employment: {},
     service: 0,
-    newCategory: { open: false, name: "", parent: "" },
+    newCategory: { open: false, name: "", ancestry: "" },
   });
 
-  const setFirstEmployee = () => {
-    if (!!props.employees.length) {
-      setData({ ...data, employee: props.employees[0] });
+  const setFirstEmployment = () => {
+    if (!!employment.data.length) {
+      setData({ ...data, employment: employment.data[0] });
     }
   };
 
   useEffect(() => {
-    dispatch("@serviceCategory/SERVICE_CATEGORIES_REQUEST");
+    document.addEventListener("scroll", trackScrolling);
+
+    dispatch(ServiceCategoryActions.serviceCategoriesRequest());
+    dispatch(ServiceActions.servicesRequest());
+    dispatch(ServiceActions.petKindsRequest());
+    dispatch(EmploymentActions.employmentsRequest());
+    return () => {
+      document.removeEventListener("scroll", trackScrolling);
+    };
   }, []);
+
+  useEffect(() => {
+    if (serviceCategory.meta.page > 1)
+      dispatch(ServiceCategoryActions.serviceCategoriesRequest());
+  }, [serviceCategory.meta.page]);
+
+  const isBottom = () => {
+    return (
+      document.scrollingElement.scrollHeight -
+        document.scrollingElement.scrollTop ===
+      document.scrollingElement.clientHeight
+    );
+  };
+
+  const trackScrolling = () => {
+    if (isBottom() && !!!serviceCategory.fetching) {
+      dispatch(
+        ServiceCategoryActions.setMeta({
+          ...serviceCategory.meta,
+          page: serviceCategory.meta.page + 1,
+        })
+      );
+    }
+  };
+
+  const handleSaveCategory = () => {
+    if (!!!serviceCategory.saving)
+      dispatch(
+        ServiceCategoryActions.createServiceCategoryRequest(data.newCategory)
+      );
+  };
 
   return (
     <Container>
+      <Head>
+        <title>Serviços e habilidades - Pet Booking</title>
+      </Head>
+
       <SiteHeader></SiteHeader>
 
       <Header
-        employee={data.employee}
-        showBack={data.addStep > 0}
-        backAction={() => setData({ ...data, addStep: 0 })}
-        addService={() => setData({ ...data, addStep: 1 })}
+        employment={data.employment}
+        showBack={service.step > 0}
+        backAction={() => dispatch(ServiceActions.setStep(0))}
+        addService={() => dispatch(ServiceActions.setStep(1))}
         addCategory={() => setData({ ...data, newCategory: { open: true } })}
-        addStep={data.addStep}
-        service={data.service}
+        step={service.step}
+        service={data.newService}
       />
 
       <Divider className="margin-t-3 margin-b-3" />
 
-      {data.addStep === 0 && (
+      {service.step === 0 && (
         <React.Fragment>
-          {!!props.employees.length && (
-            <Employees
-              data={props.employees}
-              employee={data.employee}
-              setEmployee={(e) => setData({ ...data, employee: e })}
+          {!!employment.fetching && (
+            <Grid
+              container
+              justify="center"
+              alignItems="center"
+              className="margin-b-4"
+            >
+              <CircularProgress color="secondary" />
+            </Grid>
+          )}
+
+          {!!!employment.fetching && (
+            <Employments
+              data={employment.data}
+              employment={data.employment}
+              setEmployment={(e) => {
+                setData({ ...data, employment: e });
+                if (!!!e.id) {
+                  dispatch(
+                    ServiceCategoryActions.setMeta({
+                      ...serviceCategory.meta,
+                      page: 1,
+                    })
+                  );
+                  dispatch(ServiceCategoryActions.serviceCategoriesRequest());
+                }
+              }}
             />
           )}
-          <Services
-            data={
-              !!data.employee.id
-                ? data.employee.service_categories
-                : props.service_categories
-            }
-            employee={data.employee}
-            setEmployee={(e) => {
+
+          <ServiceCategories
+            data={serviceCategory.data}
+            employment={data.employment}
+            setEmployment={(e) => {
               if (!!!e.service_categories) {
                 setData({
                   ...data,
-                  employee: props.employees.find((item) => item.id === e.id),
+                  employment: employment.data.find((item) => item.id === e.id),
                 });
               } else {
-                setData({ ...data, employee: e });
+                setData({ ...data, employment: e });
               }
             }}
-            setFirstEmployee={setFirstEmployee}
+            setFirstEmployment={setFirstEmployment}
+            editService={(_service, category) => {
+              setData({
+                ...data,
+                newService: {
+                  ...data.newService,
+                  ..._service,
+                  category: category,
+                },
+              });
+              dispatch(ServiceActions.setStep(service.step + 2));
+            }}
           />
+
+          {!!serviceCategory.fetching && (
+            <Grid
+              container
+              justify="center"
+              alignItems="center"
+              className="margin-t-4"
+            >
+              <CircularProgress color="secondary" />
+            </Grid>
+          )}
         </React.Fragment>
       )}
-      {data.addStep === 1 && (
+
+      {service.step === 1 && (
         <ServiceInput
-          services={[{ id: 1, name: "Banho" }]}
-          setService={(e) => {
-            setData({ ...data, service: e, addStep: data.addStep + 1 });
+          categories={serviceCategory.data}
+          setCategory={(e) => {
+            setData({
+              ...data,
+              newService: { category: e },
+            });
+            dispatch(ServiceActions.setStep(service.step + 1));
           }}
         />
       )}
-      {data.addStep === 2 && <ServiceForm service={data.service} />}
+
+      {service.step === 2 && (
+        <ServiceForm
+          newService={data.newService}
+          services={service.data}
+          categories={serviceCategory.data}
+        />
+      )}
 
       <CustomDialog
         header="Adicionar categoria"
@@ -109,37 +211,70 @@ export default function ServicesPage() {
         onClose={() => setData({ ...data, newCategory: { open: false } })}
       >
         <DialogContent>
-          <InputLabel>Nome</InputLabel>
+          <InputLabel className="margin-b-0">Nome</InputLabel>
           <TextField
             variant="outlined"
             placeholder="Nome da categoria"
             value={data.newCategory.name}
             fullWidth
-            size="small"
-            onChange={(e) => setComission(e.target.value)}
+            onChange={(e) =>
+              setData({
+                ...data,
+                newCategory: { ...data.newCategory, name: e.target.value },
+              })
+            }
             className="margin-b-3"
           />
 
-          <InputLabel>Categoria filha de</InputLabel>
-          <TextField
+          <InputLabel className="margin-b-0">Categoria filha de</InputLabel>
+          <Select
             variant="outlined"
-            placeholder="HH:MM"
-            value={data.newCategory.parent}
             fullWidth
             size="small"
-            onChange={(e) => setDuration(e.target.value)}
+            onChange={(e) =>
+              setData({
+                ...data,
+                newCategory: { ...data.newCategory, ancestry: e.target.value },
+              })
+            }
             className="margin-b-3"
-          />
+          >
+            <MenuItem value="">Nenhum</MenuItem>
+            {serviceCategory.data.map((item, i) => (
+              <MenuItem key={i} value={item.id}>
+                {item.name}
+              </MenuItem>
+            ))}
+          </Select>
         </DialogContent>
         <DialogActions>
           <Grid container justify="space-between">
             <Grid item md={6}>
-              <Button variant="contained" color="secondary">
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() =>
+                  setData({ ...data, newCategory: { open: false } })
+                }
+              >
                 Cancelar
               </Button>
             </Grid>
             <Grid item md={6} className="d-flex justify-end">
-              <Button variant="contained" color="primary">
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSaveCategory}
+                endIcon={
+                  !!serviceCategory.saving && (
+                    <CircularProgress
+                      color="secondary"
+                      size={20}
+                      className="white"
+                    />
+                  )
+                }
+              >
                 Salvar
               </Button>
             </Grid>

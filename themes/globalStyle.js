@@ -9,7 +9,7 @@ const GlobalStyle = createGlobalStyle`
       @media (max-width: 768px) {
         font-size: 14px;
       }
-      font-family: Roboto !important;
+      font-family: 'Roboto', sans-serif !important;
     }
 
 
@@ -77,6 +77,10 @@ const GlobalStyle = createGlobalStyle`
     }
   }
 
+  .white {
+    color: ${Colors.white} !important;
+  }
+
   ${genCommonClasses()}
 `;
 
@@ -138,6 +142,9 @@ function genCommonClasses() {
     }
     .justify-center {
       justify-content: center !important;
+    }
+    .align-start {
+      align-items: flex-start !important;
     }
     .align-center {
       align-items: center !important;

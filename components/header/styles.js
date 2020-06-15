@@ -8,12 +8,12 @@ export const Component = styled(Grid)`
   right: 0;
   top: 0;
   height: 60px;
-  width: calc(100% - 60px);
+  width: calc(100% - 60px) !important;
   font-size: 0.9rem;
   font-weight: 600;
   letter-spacing: -0.25px;
   transform: translate3d(0, 0, 0);
-  padding: 0 ${Metrics.m0};
+  padding-right: ${Metrics.m0};
 
   background-color: ${Colors.primaryColor};
   color: ${Colors.transparentWhite};

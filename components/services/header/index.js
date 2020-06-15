@@ -8,45 +8,59 @@ import IconButton from "@material-ui/core/IconButton";
 import ArrowBack from "@material-ui/icons/ArrowBack";
 import Add from "@material-ui/icons/Add";
 
-export default function Header(props) {
+export default function Header({
+  showBack,
+  step,
+  addCategory,
+  addService,
+  backAction,
+  employment,
+  service,
+}) {
   return (
     <Grid container justify="space-between" alignItems="center">
       <Grid item md={6} className="d-flex align-center">
-        {props.showBack && (
-          <IconButton onClick={props.backAction}>
+        {showBack && (
+          <IconButton onClick={backAction}>
             <ArrowBack fontSize="large" />
           </IconButton>
         )}
         <Typography variant="subtitle1" className="margin-l-2">
-          {props.addStep === 0 && (
+          {step === 0 && (
             <b>
               Serviços e habilidades{" "}
-              {!!props.employee.id && ` de ${props.employee.nickname}`}
+              {!!employment.id && ` de ${employment.nickname}`}
             </b>
           )}
-          {props.addStep === 1 && <b>Adicionar serviço</b>}
-          {props.addStep === 2 && (
-            <b>Adicionar serviço - {props.service.name}</b>
+          {step === 1 && <b>Adicionar serviço</b>}
+          {step === 2 && (
+            <b>
+              {!!!service.id &&
+                `Adicionar serviço ${
+                  !!service.name ? " - " + service.name : ""
+                }`}
+
+              {!!service.id &&
+                `Editando serviço ${
+                  !!service.name ? " - " + service.name : ""
+                }`}
+            </b>
           )}
         </Typography>
       </Grid>
       <Grid item md={6} className="d-flex justify-end">
-        {!!!props.showBack && (
+        {!!!showBack && (
           <Button
             variant="contained"
             endIcon={<Add />}
-            onClick={props.addCategory}
+            onClick={addCategory}
             className="margin-r-2"
           >
             Adicionar categoria
           </Button>
         )}
-        {!!!props.showBack && (
-          <Button
-            variant="contained"
-            endIcon={<Add />}
-            onClick={props.addService}
-          >
+        {!!!showBack && (
+          <Button variant="contained" endIcon={<Add />} onClick={addService}>
             Adicionar serviço
           </Button>
         )}

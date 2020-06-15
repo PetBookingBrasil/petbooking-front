@@ -1,13 +1,13 @@
-import React, { useContext } from "react";
+import React from "react";
+import { useSelector } from "react-redux";
 
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 
 import { Component, LogoWrapper, Image } from "./styles";
-import { AppContext } from "../../context";
 
 export default function Header() {
-  const { state, dispatch } = useContext(AppContext);
+  const user = useSelector(({ user }) => user);
 
   return (
     <Component container justify="flex-end" alignItems="center">
@@ -26,7 +26,7 @@ export default function Header() {
       </Grid>
 
       <Grid item>
-        <Typography variant="body2">{state.user.name}</Typography>
+        <Typography variant="body2">{user.name}</Typography>
       </Grid>
     </Component>
   );
