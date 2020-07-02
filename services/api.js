@@ -6,7 +6,7 @@ export const getConsumerUuid = () => localStorage.getItem("@pb/consumerUuid");
 export const getConsumerToken = () => localStorage.getItem("@pb/consumerToken");
 
 const api = apisauce.create({
-  baseURL: "http://localhost:3000/",
+  baseURL: "http://localhost:3001/",
   timeout: 30000,
   headers: {
     "Content-Type": "application/vnd.api+json",
@@ -209,6 +209,21 @@ const updatePrices = (rule) => {
   });
 };
 
+const createPrices = (rule) => {
+  const prices = rule.combinations.data.map((item) => ({
+    service_price_combination_id: item.id,
+    price:
+      typeof item.price === "number"
+        ? item.price
+        : item.price.replace("R$", ""),
+  }));
+  
+  return api.post("api/v3/business_service_prices", {
+    business_service_prices: prices,
+    service_id: rule.service.id
+  });
+};
+
 const requests = {
   setConsumerToken,
   employments,
@@ -219,6 +234,7 @@ const requests = {
   rules,
   prices,
   breeds,
+  createPrices,
   updatePrices,
   updateService,
   removeService,
