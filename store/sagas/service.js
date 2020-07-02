@@ -22,10 +22,12 @@ export function* create({ data }) {
     yield put(ServiceActions.setStep(0));
     yield put(ServiceCategoryActions.serviceCategoriesRequest());
     yield put(ServiceActions.createServiceSuccess(response.data));
+    
+    const service = response.data.data
 
     yield all(
       data.rules.map((item) =>
-        put(ServicePriceRuleActions.updatePricesRequest(item))
+        put(ServicePriceRuleActions.createPricesRequest({ ...item, service }))
       )
     );
   } else {

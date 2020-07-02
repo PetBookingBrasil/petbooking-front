@@ -1,5 +1,4 @@
 import { takeLatest, call, put, all, select } from "redux-saga/effects";
-import { toast } from "react-toastify";
 import api from "../../services/api";
 import ServicePriceRuleActions from "../reducers/servicePriceRule";
 import { ServicePriceRuleSelectors } from "../reducers/servicePriceRule";
@@ -42,9 +41,19 @@ export function* updatePrices({ data }) {
   }
 }
 
+export function* createPrices({ data }) {
+  const response = yield call(api.createPrices, data);
+  if (response.ok) {
+    yield put(ServicePriceRuleActions.createPricesSuccess(response.data));
+  } else {
+    yield put(ServicePriceRuleActions.createPricesFailure(response.data));
+  }
+}
+
 export default all([
   takeLatest("RULES_REQUEST", index),
   takeLatest("PRICES_REQUEST", pricesIndex),
   takeLatest("BREEDS_REQUEST", breedsIndex),
   takeLatest("UPDATE_PRICES_REQUEST", updatePrices),
+  takeLatest("CREATE_PRICES_REQUEST", createPrices),
 ]);

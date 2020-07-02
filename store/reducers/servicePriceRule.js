@@ -16,6 +16,9 @@ const { Types, Creators } = createActions({
   updatePricesRequest: ["data"],
   updatePricesSuccess: ["data"],
   updatePricesFailure: ["data"],
+  createPricesRequest: ["data"],
+  createPricesSuccess: ["data"],
+  createPricesFailure: ["data"],
 });
 
 export const ServicePriceRuleTypes = Types;
@@ -106,6 +109,21 @@ export const updatePricesFailure = (state, { data }) =>
     draft.fetching = false;
   });
 
+export const createPricesRequest = (state, { data }) =>
+  produce(state, (draft) => {
+    draft.fetching = true;
+  });
+
+export const createPricesSuccess = (state, { data }) =>
+  produce(state, (draft) => {
+    draft.fetching = false;
+  });
+
+export const createPricesFailure = (state, { data }) =>
+  produce(state, (draft) => {
+    draft.fetching = false;
+  });
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -121,4 +139,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.UPDATE_PRICES_REQUEST]: updatePricesRequest,
   [Types.UPDATE_PRICES_SUCCESS]: updatePricesSuccess,
   [Types.UPDATE_PRICES_FAILURE]: updatePricesFailure,
+  [Types.CREATE_PRICES_REQUEST]: createPricesRequest,
+  [Types.CREATE_PRICES_SUCCESS]: createPricesSuccess,
+  [Types.CREATE_PRICES_FAILURE]: createPricesFailure,
 });
