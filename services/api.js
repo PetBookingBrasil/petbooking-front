@@ -1,4 +1,5 @@
 import apisauce from "apisauce";
+import { getPriceByService } from '../helpers/business_service_prices'
 
 export const getToken = () => localStorage.getItem("@pb/token");
 export const getBusinessId = () => localStorage.getItem("@pb/businessId");
@@ -197,13 +198,13 @@ const breeds = (kind) =>
 
 const updatePrices = (rule) => {
   const prices = rule.combinations.data.map((item) => ({
-    id: item.business_service_price.id,
+    id: (getPriceByService(item.business_service_prices, rule.service) || {}).id,
     price:
       typeof item.price === "number"
         ? item.price
         : item.price.replace("R$", ""),
   }));
-
+  
   return api.put("api/v3/business_service_prices", {
     business_service_prices: prices,
   });

@@ -22,6 +22,7 @@ import ExpandMore from '@material-ui/icons/ExpandMore'
 import { CollapseTitle, CollapseBody } from './styles'
 
 import { DaysMask, MoneyMask, DurationMask } from '../../../helpers/masks'
+import { getPriceByService } from '../../../helpers/business_service_prices'
 
 export default function Form({ newService, services, categories }) {
   const dispatch = useDispatch()
@@ -92,7 +93,7 @@ export default function Form({ newService, services, categories }) {
           yLabels: item.service_price_variations[1].variations,
           data: item.service_price_combinations.map((inner) => ({
             ...inner,
-            price: state.id === undefined ? 0 : inner.business_service_price.price
+            price: state.id === undefined ? 0 : (getPriceByService(inner.business_service_prices, state) || {}).price
           })),
         },
       }))

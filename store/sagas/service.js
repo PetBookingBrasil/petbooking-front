@@ -44,10 +44,11 @@ export function* update({ data }) {
     toast.success("Serviço atualizado com sucesso!");
     yield put(ServiceActions.setStep(0));
     yield put(ServiceActions.updateServiceSuccess(response.data));
+    const service = response.data.data
 
     yield all(
       data.rules.map((item) =>
-        put(ServicePriceRuleActions.updatePricesRequest(item))
+        put(ServicePriceRuleActions.updatePricesRequest({ ...item, service }))
       )
     );
 
