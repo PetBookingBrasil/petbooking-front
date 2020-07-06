@@ -14,6 +14,12 @@ const { Types, Creators } = createActions({
   updateServiceRequest: ["data"],
   updateServiceSuccess: ["data"],
   updateServiceFailure: ["data"],
+  searchServicesRequest: ["data"],
+  searchServicesSuccess: ["data"],
+  searchServicesFailure: ["data"],
+  createBusinessServiceRequest: ["data"],
+  createBusinessServiceSuccess: ["data"],
+  createBusinessServiceFailure: ["data"],
   removeServiceRequest: ["data"],
   removeServiceSuccess: ["data"],
   removeServiceFailure: ["data"],
@@ -71,6 +77,39 @@ export const servicesSuccess = (state, { data }) =>
 export const servicesFailure = (state, { data }) =>
   produce(state, (draft) => {
     draft.fetching = false;
+  });
+
+export const searchServicesRequest = (state, action) => {
+  return produce(state, (draft) => {
+    draft.fetching = true;
+    draft.action_type = action.type;
+  });
+}
+
+export const searchServicesSuccess = (state, { data }) =>
+  produce(state, (draft) => {
+    draft.fetching = false;
+    draft.data = data.data;
+  });
+
+export const searchServicesFailure = (state, { data }) =>
+  produce(state, (draft) => {
+    draft.fetching = false;
+  });
+
+export const createBusinessServiceRequest = (state, { data }) =>
+  produce(state, (draft) => {
+    draft.saving = true;
+  });
+
+export const createBusinessServiceSuccess = (state, { data }) =>
+  produce(state, (draft) => {
+    draft.saving = false;
+  });
+
+export const createBusinessServiceFailure = (state, { data }) =>
+  produce(state, (draft) => {
+    draft.saving = false;
   });
 
 export const createServiceRequest = (state, { data }) =>
@@ -192,6 +231,9 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.UPDATE_SERVICE_REQUEST]: updateServiceRequest,
   [Types.UPDATE_SERVICE_SUCCESS]: updateServiceSuccess,
   [Types.UPDATE_SERVICE_FAILURE]: updateServiceFailure,
+  [Types.SEARCH_SERVICES_REQUEST]: searchServicesRequest,
+  [Types.SEARCH_SERVICES_SUCCESS]: searchServicesSuccess,
+  [Types.SEARCH_SERVICES_FAILURE]: searchServicesFailure,
   [Types.REMOVE_SERVICE_REQUEST]: removeServiceRequest,
   [Types.REMOVE_SERVICE_SUCCESS]: removeServiceSuccess,
   [Types.REMOVE_SERVICE_FAILURE]: removeServiceFailure,
@@ -207,4 +249,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.REMOVE_SKILL_REQUEST]: removeSkillRequest,
   [Types.REMOVE_SKILL_SUCCESS]: removeSkillSuccess,
   [Types.REMOVE_SKILL_FAILURE]: removeSkillFailure,
+  [Types.CREATE_BUSINESS_SERVICE_REQUEST]: createBusinessServiceRequest,
+  [Types.CREATE_BUSINESS_SERVICE_SUCCESS]: createBusinessServiceSuccess,
+  [Types.CREATE_BUSINESS_SERVICE_FAILURE]: createBusinessServiceFailure,
 });

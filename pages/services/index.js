@@ -190,7 +190,7 @@ export default function ServicesPage() {
           setCategory={(e) => {
             setData({
               ...data,
-              newService: { category: e },
+              newService: e,
             });
             dispatch(ServiceActions.setStep(service.step + 1));
           }}

@@ -56,6 +56,15 @@ const services = () =>
     business_id: getBusinessId(),
   });
 
+const searchServices = (name) => {
+  return api.get("api/v3/services/search", {
+    application: "petbooking",
+    business_id: getBusinessId(),
+    public: true,
+    name
+  });
+}
+
 const createService = (params) => {
   return api.post("api/v3/services", {
     service: {
@@ -78,6 +87,25 @@ const createService = (params) => {
       municipal_code: params.municipalCode,
       reschedule_reminder_days_after: params.sendAfter,
       reschedule_reminder_message: params.sendAfterMessage,
+    },
+  });
+};
+
+const createBusinessService = (params) => {
+  return api.post("api/v3/business_services", {
+    business_service: {
+      application: "petbooking",
+      business_id: getBusinessId(),
+      service_id: params.id,
+      price:
+        typeof params.price === "number"
+          ? params.price
+          : params.price.replace("R$", ""),
+      cost:
+        typeof params.cost === "number"
+          ? params.cost
+          : params.cost.replace("R$", ""),
+      duration: params.duration,
     },
   });
 };
@@ -213,15 +241,15 @@ const updatePrices = (rule) => {
 const createPrices = (rule) => {
   const prices = rule.combinations.data.map((item) => ({
     service_price_combination_id: item.id,
+    business_service_id: rule.business_service.id,
     price:
       typeof item.price === "number"
         ? item.price
-        : item.price.replace("R$", ""),
+        : (item.price && item.price.replace("R$", "")) || 0,
   }));
   
   return api.post("api/v3/business_service_prices", {
     business_service_prices: prices,
-    service_id: rule.service.id
   });
 };
 
@@ -238,11 +266,13 @@ const requests = {
   createPrices,
   updatePrices,
   updateService,
+  searchServices,
   removeService,
   petKinds,
   createSkill,
   updateSkill,
   removeSkill,
+  createBusinessService,
 };
 
 export default requests;
