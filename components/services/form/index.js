@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import ServiceActions from '../../../store/reducers/service'
 import ServicePriceRuleActions from '../../../store/reducers/servicePriceRule'
+import { getBusinessId } from '../../../services/api'
 
 import { toast } from 'react-toastify'
 
@@ -33,17 +34,19 @@ export default function Form({ newService, services, categories }) {
     })
   )
   
+  const { business_services } = newService
+  const business_service = (business_services.filter((bs) => bs.business_id == getBusinessId())[0] || {})
+  
   const [state, setState] = useState({
     id: newService.id,
     name: !!newService.id ? newService.name : newService.category.name,
     description: newService.description,
-    category: newService.category.id,
-    business_id: newService.category.business_id,
+    category: newService.service_category_id,
     ancestry: newService.ancestry,
-    cost: !!newService.cost ? newService.cost : 0,
-    price: !!newService.price ? newService.price : 0,
-    duration: newService.duration_formatted
-      ? newService.duration_formatted
+    cost: !!newService.cost ? newService.cost : business_service.cost || 0,
+    price: business_service ? business_service.price : !!newService.price && newService.price || 0,
+    duration: business_service.duration || newService.duration
+      ? newService.duration
       : '00:00',
     aliquot: !!newService.aliquot ? newService.aliquot : '',
     issType: !!newService.iss_type ? newService.iss_type : '2',
@@ -112,16 +115,10 @@ export default function Form({ newService, services, categories }) {
       toast.error('Verifique os campos obrigatórios, por favor')
       return
     }
-    
-    if (!!state.id) {
-      dispatch(
-        ServiceActions.updateServiceRequest({ ...state, rules: formattedRules })
-      )
-    } else {
-      dispatch(
-        ServiceActions.createServiceRequest({ ...state, rules: formattedRules })
-      )
-    }
+  
+    dispatch(
+      ServiceActions.createBusinessServiceRequest({ ...state, rules: formattedRules })
+    )
   }
   
   return (

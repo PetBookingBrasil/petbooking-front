@@ -15,6 +15,15 @@ export function* index({ data }) {
   }
 }
 
+export function* search({ data }) {
+  const response = yield call(api.searchServices, data);
+  if (response.ok) {
+    yield put(ServiceActions.searchServicesSuccess(response.data));
+  } else {
+    yield put(ServiceActions.searchServicesFailure(response.data));
+  }
+}
+
 export function* create({ data }) {
   const response = yield call(api.createService, data);
   if (response.ok) {
@@ -28,6 +37,29 @@ export function* create({ data }) {
     yield all(
       data.rules.map((item) =>
         put(ServicePriceRuleActions.createPricesRequest({ ...item, service }))
+      )
+    );
+  } else {
+    toast.error(
+      "Ops, ocorreu um erro ao criar seu serviço, por favor, tente novamente"
+    );
+    yield put(ServiceActions.createServiceFailure(response.data));
+  }
+}
+
+export function* createBusinessService({ data }) {
+  const response = yield call(api.createBusinessService, data);
+  if (response.ok) {
+    toast.success("Serviço criado com sucesso!");
+    yield put(ServiceActions.setStep(0));
+    yield put(ServiceCategoryActions.serviceCategoriesRequest());
+    yield put(ServiceActions.createBusinessServiceSuccess(response.data));
+    
+    const business_service = response.data.data
+  
+    yield all(
+      data.rules.map((item) =>
+        put(ServicePriceRuleActions.createPricesRequest({ ...item, business_service }))
       )
     );
   } else {
@@ -134,6 +166,7 @@ export function* removeSkill({ data }) {
 
 export default all([
   takeLatest("SERVICES_REQUEST", index),
+  takeLatest("SEARCH_SERVICES_REQUEST", search),
   takeLatest("CREATE_SERVICE_REQUEST", create),
   takeLatest("UPDATE_SERVICE_REQUEST", update),
   takeLatest("REMOVE_SERVICE_REQUEST", remove),
@@ -141,4 +174,5 @@ export default all([
   takeLatest("CREATE_SKILL_REQUEST", createSkill),
   takeLatest("UPDATE_SKILL_REQUEST", updateSkill),
   takeLatest("REMOVE_SKILL_REQUEST", removeSkill),
+  takeLatest("CREATE_BUSINESS_SERVICE_REQUEST", createBusinessService),
 ]);
