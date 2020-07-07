@@ -47,29 +47,6 @@ export function* create({ data }) {
   }
 }
 
-export function* createBusinessService({ data }) {
-  const response = yield call(api.createBusinessService, data);
-  if (response.ok) {
-    toast.success("Serviço criado com sucesso!");
-    yield put(ServiceActions.setStep(0));
-    yield put(ServiceCategoryActions.serviceCategoriesRequest());
-    yield put(ServiceActions.createBusinessServiceSuccess(response.data));
-    
-    const business_service = response.data.data
-  
-    yield all(
-      data.rules.map((item) =>
-        put(ServicePriceRuleActions.createPricesRequest({ ...item, business_service }))
-      )
-    );
-  } else {
-    toast.error(
-      "Ops, ocorreu um erro ao criar seu serviço, por favor, tente novamente"
-    );
-    yield put(ServiceActions.createServiceFailure(response.data));
-  }
-}
-
 export function* update({ data }) {
   const response = yield call(api.updateService, data);
   if (response.ok) {
@@ -77,12 +54,6 @@ export function* update({ data }) {
     yield put(ServiceActions.setStep(0));
     yield put(ServiceActions.updateServiceSuccess(response.data));
     const service = response.data.data
-
-    yield all(
-      data.rules.map((item) =>
-        put(ServicePriceRuleActions.updatePricesRequest({ ...item, service }))
-      )
-    );
 
     yield put(ServiceCategoryActions.serviceCategoriesRequest());
   } else {
@@ -174,5 +145,4 @@ export default all([
   takeLatest("CREATE_SKILL_REQUEST", createSkill),
   takeLatest("UPDATE_SKILL_REQUEST", updateSkill),
   takeLatest("REMOVE_SKILL_REQUEST", removeSkill),
-  takeLatest("CREATE_BUSINESS_SERVICE_REQUEST", createBusinessService),
 ]);
