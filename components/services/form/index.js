@@ -139,43 +139,7 @@ export default function Form({ newService, services, categories }) {
             onChange={(e) => setState({ ...state, name: e.target.value })}
           />
         </Grid>
-        <Grid item xs={4}>
-          <InputLabel className="margin-b-0">Serviço adicional de</InputLabel>
-          <Select
-            variant="outlined"
-            fullWidth
-            onChange={(e) => setState({ ...state, ancestry: e.target.value })}
-            className="margin-b-0"
-          >
-            <MenuItem value="">Nenhum</MenuItem>
-            {services.map((item, i) => (
-              <MenuItem key={i} value={item.id}>
-                {item.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </Grid>
-        <Grid item xs={4}>
-          <InputLabel className="margin-b-0">Preço</InputLabel>
-          <TextField
-            fullWidth
-            variant="outlined"
-            value={state.price}
-            InputProps={{
-              inputComponent: MoneyMask,
-            }}
-            onChange={(e) => setState({ ...state, price: e.target.value })}
-          />
-        </Grid>
-      </Grid>
-      
-      <Grid
-        container
-        justify="space-between"
-        alignItems="flex-start"
-        spacing={3}
-        className="margin-b-0"
-      >
+
         <Grid item xs={4}>
           <InputLabel className="margin-b-0">Categoria mãe</InputLabel>
           <Select
@@ -192,6 +156,45 @@ export default function Form({ newService, services, categories }) {
               </MenuItem>
             ))}
           </Select>
+        </Grid>
+
+        <Grid item xs={4}>
+          <InputLabel className="margin-b-0">Serviço adicional de</InputLabel>
+          <Select
+            variant="outlined"
+            fullWidth
+            onChange={(e) => setState({ ...state, ancestry: e.target.value })}
+            className="margin-b-0"
+          >
+            <MenuItem value="">Nenhum</MenuItem>
+            {services.map((item, i) => (
+              <MenuItem key={i} value={item.id}>
+                {item.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </Grid>
+      </Grid>
+      
+      <Grid
+        container
+        justify="space-between"
+        alignItems="flex-start"
+        spacing={3}
+        className="margin-b-0"
+      >
+
+        <Grid item xs={4}>
+          <InputLabel className="margin-b-0">Preço</InputLabel>
+          <TextField
+            fullWidth
+            variant="outlined"
+            value={state.price}
+            InputProps={{
+              inputComponent: MoneyMask,
+            }}
+            onChange={(e) => setState({ ...state, price: e.target.value })}
+          />
         </Grid>
         
         <Grid item xs={4}>
