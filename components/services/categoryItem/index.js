@@ -15,6 +15,7 @@ export default function CategoryItem({
   subItem,
   editItem,
   removeItem,
+  businessService,
 }) {
   return (
     <Component item md={12}>
@@ -26,6 +27,7 @@ export default function CategoryItem({
       {data.services.map((item, i) => (
         <ServiceItem
           key={i}
+          businessService={businessService}
           data={item}
           setFirstEmployment={setFirstEmployment}
           setEmployment={setEmployment}

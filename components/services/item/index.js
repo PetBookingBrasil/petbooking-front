@@ -9,6 +9,7 @@ import Edit from "@material-ui/icons/Edit";
 import Delete from "@material-ui/icons/Delete";
 import AttachMoney from "@material-ui/icons/AttachMoney";
 import Schedule from "@material-ui/icons/Schedule";
+import { getBusinessServiceByBusiness } from '../../../helpers/business_services'
 
 import { Component, SkillBtn, ImageWrapper, Initials } from "./styles";
 
@@ -18,9 +19,20 @@ export default function ServiceItem({
   setEmployment,
   editItem,
   removeItem,
+  businessService,
 }) {
-  const price = !!data.price
-    ? data.price.toLocaleString("pt-br", {
+  
+  let businessServiceCurrent;
+  
+  if (businessService.service_id === data.id) {
+    businessServiceCurrent = businessService
+  } else {
+    businessServiceCurrent = getBusinessServiceByBusiness(data.business_services)
+  }
+  
+  let price = businessServiceCurrent && businessServiceCurrent.price || data.price
+  
+  price = price ? price.toLocaleString("pt-br", {
         style: "currency",
         currency: "BRL",
       })

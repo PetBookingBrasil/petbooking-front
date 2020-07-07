@@ -25,6 +25,7 @@ export default function Categories({
   setEmployment,
   setFirstEmployment,
   editService,
+  businessService,
 }) {
   const dispatch = useDispatch();
   const service = useSelector(({ service }) => service);
@@ -109,6 +110,7 @@ export default function Categories({
       {categories.map((item) => (
         <ServiceCategoryItem
           key={item.id}
+          businessService={businessService}
           data={item}
           employment={employment}
           setEmployment={setEmployment}

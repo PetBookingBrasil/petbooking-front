@@ -29,11 +29,12 @@ import Container from "../../components/container";
 
 export default function ServicesPage() {
   const dispatch = useDispatch();
-  const { employment, service, serviceCategory } = useSelector(
-    ({ employment, service, serviceCategory }) => ({
+  const { employment, service, serviceCategory, businessService } = useSelector(
+    ({ employment, service, serviceCategory, businessService }) => ({
       employment,
       serviceCategory,
       service,
+      businessService
     })
   );
 
@@ -48,7 +49,7 @@ export default function ServicesPage() {
       setData({ ...data, employment: employment.data[0] });
     }
   };
-
+  
   useEffect(() => {
     document.addEventListener("scroll", trackScrolling);
 
@@ -91,7 +92,7 @@ export default function ServicesPage() {
         ServiceCategoryActions.createServiceCategoryRequest(data.newCategory)
       );
   };
-
+  
   return (
     <Container>
       <Head>
@@ -147,6 +148,7 @@ export default function ServicesPage() {
           <ServiceCategories
             data={serviceCategory.data}
             employment={data.employment}
+            businessService={businessService.data}
             setEmployment={(e) => {
               if (!!!e.service_categories) {
                 setData({

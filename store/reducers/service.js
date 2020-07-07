@@ -17,9 +17,6 @@ const { Types, Creators } = createActions({
   searchServicesRequest: ["data"],
   searchServicesSuccess: ["data"],
   searchServicesFailure: ["data"],
-  createBusinessServiceRequest: ["data"],
-  createBusinessServiceSuccess: ["data"],
-  createBusinessServiceFailure: ["data"],
   removeServiceRequest: ["data"],
   removeServiceSuccess: ["data"],
   removeServiceFailure: ["data"],
@@ -95,21 +92,6 @@ export const searchServicesSuccess = (state, { data }) =>
 export const searchServicesFailure = (state, { data }) =>
   produce(state, (draft) => {
     draft.fetching = false;
-  });
-
-export const createBusinessServiceRequest = (state, { data }) =>
-  produce(state, (draft) => {
-    draft.saving = true;
-  });
-
-export const createBusinessServiceSuccess = (state, { data }) =>
-  produce(state, (draft) => {
-    draft.saving = false;
-  });
-
-export const createBusinessServiceFailure = (state, { data }) =>
-  produce(state, (draft) => {
-    draft.saving = false;
   });
 
 export const createServiceRequest = (state, { data }) =>
@@ -249,7 +231,4 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.REMOVE_SKILL_REQUEST]: removeSkillRequest,
   [Types.REMOVE_SKILL_SUCCESS]: removeSkillSuccess,
   [Types.REMOVE_SKILL_FAILURE]: removeSkillFailure,
-  [Types.CREATE_BUSINESS_SERVICE_REQUEST]: createBusinessServiceRequest,
-  [Types.CREATE_BUSINESS_SERVICE_SUCCESS]: createBusinessServiceSuccess,
-  [Types.CREATE_BUSINESS_SERVICE_FAILURE]: createBusinessServiceFailure,
 });

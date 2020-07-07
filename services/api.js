@@ -110,6 +110,23 @@ const createBusinessService = (params) => {
   });
 };
 
+const updateBusinessService = (params) => {
+  return api.put("api/v3/business_services", {
+    id: params.id,
+    business_service: {
+      price:
+        typeof params.price === "number"
+          ? params.price
+          : params.price.replace("R$", ""),
+      cost:
+        typeof params.cost === "number"
+          ? params.cost
+          : params.cost.replace("R$", ""),
+      duration: params.duration,
+    },
+  });
+};
+
 const updateService = (params) => {
   return api.put("api/v3/services", {
     id: params.id,
@@ -273,6 +290,7 @@ const requests = {
   updateSkill,
   removeSkill,
   createBusinessService,
+  updateBusinessService,
 };
 
 export default requests;

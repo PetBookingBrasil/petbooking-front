@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import ServiceActions from '../../../store/reducers/service'
 import ServicePriceRuleActions from '../../../store/reducers/servicePriceRule'
-import { getBusinessId } from '../../../services/api'
+import BusinessServiceActions from '../../../store/reducers/businessService'
+import { getBusinessServiceByBusiness } from '../../../helpers/business_services'
 
 import { toast } from 'react-toastify'
 
@@ -27,15 +27,17 @@ import { getPriceByService } from '../../../helpers/business_service_prices'
 
 export default function Form({ newService, services, categories }) {
   const dispatch = useDispatch()
-  const { service, servicePriceRule } = useSelector(
-    ({ service, servicePriceRule }) => ({
+  let { service, servicePriceRule, businessService } = useSelector(
+    ({ service, servicePriceRule, businessService }) => ({
       service,
       servicePriceRule,
+      businessService
     })
   )
   
-  const { business_services } = newService
-  const business_service = (business_services.filter((bs) => bs.business_id == getBusinessId())[0] || {})
+  const { business_services: BusinessServices } = newService
+  const businessServiceFromService = getBusinessServiceByBusiness(BusinessServices)
+  businessService = businessServiceFromService || businessService.data
   
   const [state, setState] = useState({
     id: newService.id,
@@ -43,9 +45,9 @@ export default function Form({ newService, services, categories }) {
     description: newService.description,
     category: newService.service_category_id,
     ancestry: newService.ancestry,
-    cost: !!newService.cost ? newService.cost : business_service.cost || 0,
-    price: business_service ? business_service.price : !!newService.price && newService.price || 0,
-    duration: business_service.duration || newService.duration
+    cost: !!newService.cost ? newService.cost : businessService.cost || 0,
+    price: businessService ? businessService.price : !!newService.price && newService.price || 0,
+    duration: businessService.duration || newService.duration
       ? newService.duration
       : '00:00',
     aliquot: !!newService.aliquot ? newService.aliquot : '',
@@ -115,10 +117,18 @@ export default function Form({ newService, services, categories }) {
       toast.error('Verifique os campos obrigatórios, por favor')
       return
     }
-  
-    dispatch(
-      ServiceActions.createBusinessServiceRequest({ ...state, rules: formattedRules })
-    )
+    
+    if (businessService.id == undefined) {
+      dispatch(
+        BusinessServiceActions.createBusinessServiceRequest({ ...state, rules: formattedRules })
+      )
+    } else {
+      dispatch(
+        BusinessServiceActions.updateBusinessServiceRequest(
+          { ...state, rules: formattedRules, service: newService, id: businessService.id }
+        )
+      )
+    }
   }
   
   return (
