@@ -7,6 +7,7 @@ const finalReducers = combineReducers({
   serviceCategory: require("./serviceCategory").reducer,
   servicePriceRule: require("./servicePriceRule").reducer,
   businessService: require("./businessService").reducer,
+  business: require("./business").reducer,
 });
 
 export default finalReducers;

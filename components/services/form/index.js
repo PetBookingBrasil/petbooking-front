@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import ServicePriceRuleActions from '../../../store/reducers/servicePriceRule'
 import BusinessServiceActions from '../../../store/reducers/businessService'
+import ServiceActions from '../../../store/reducers/service'
+import FormHelperText from '@material-ui/core/FormHelperText';
 import { getBusinessServiceByBusiness } from '../../../helpers/business_services'
 
 import { toast } from 'react-toastify'
@@ -24,14 +26,16 @@ import { CollapseTitle, CollapseBody } from './styles'
 
 import { DaysMask, MoneyMask, DurationMask } from '../../../helpers/masks'
 import { getPriceByService } from '../../../helpers/business_service_prices'
+import { isFranchiseer } from '../../../helpers/business'
 
 export default function Form({ newService, services, categories }) {
   const dispatch = useDispatch()
-  let { service, servicePriceRule, businessService } = useSelector(
-    ({ service, servicePriceRule, businessService }) => ({
+  let { service, servicePriceRule, businessService, business } = useSelector(
+    ({ service, servicePriceRule, businessService, business }) => ({
       service,
       servicePriceRule,
-      businessService
+      businessService,
+      business,
     })
   )
   
@@ -41,7 +45,7 @@ export default function Form({ newService, services, categories }) {
   
   const [state, setState] = useState({
     id: newService.id,
-    name: !!newService.id ? newService.name : newService.category.name,
+    name: newService.name,
     description: newService.description,
     category: newService.service_category_id,
     ancestry: newService.ancestry,
@@ -63,6 +67,8 @@ export default function Form({ newService, services, categories }) {
     breeds: [],
     rulesOpen: [],
   })
+  
+  const additionalServices = (categories.filter(c => c.id === state.category)[0] || {}).services
   
   const [formattedRules, setFormattedRules] = useState([])
   
@@ -118,16 +124,20 @@ export default function Form({ newService, services, categories }) {
       return
     }
     
-    if (businessService.id == undefined) {
-      dispatch(
-        BusinessServiceActions.createBusinessServiceRequest({ ...state, rules: formattedRules })
-      )
+    if (isFranchiseer(business.data)) {
+      if (newService.id === undefined) {
+        dispatch(ServiceActions.createServiceRequest({ ...state, rules: formattedRules }))
+      } else {
+        dispatch(ServiceActions.updateServiceRequest({ ...state, rules: formattedRules }))
+      }
     } else {
-      dispatch(
-        BusinessServiceActions.updateBusinessServiceRequest(
-          { ...state, rules: formattedRules, service: newService, id: businessService.id }
+      if (businessService.id === undefined) {
+        dispatch(BusinessServiceActions.createBusinessServiceRequest({ ...state, rules: formattedRules }))
+      } else {
+        dispatch(BusinessServiceActions.updateBusinessServiceRequest(
+          { ...state, rules: formattedRules, service: newService, id: businessService.id })
         )
-      )
+      }
     }
   }
   
@@ -154,30 +164,34 @@ export default function Form({ newService, services, categories }) {
           <InputLabel className="margin-b-0">Categoria mãe</InputLabel>
           <Select
             variant="outlined"
+            disabled={!isFranchiseer(business.data)}
             fullWidth
             onChange={(e) => setState({ ...state, category: e.target.value })}
             value={state.category}
             defaultValue={state.category}
             className="margin-b-0"
           >
-            {categories.map((item, i) => (
-              <MenuItem key={i} value={item.id}>
+            {categories.map((item, i) => {
+              <FormHelperText>Placeholder</FormHelperText>
+              return <MenuItem key={i} value={item.id}>
                 {item.name}
               </MenuItem>
-            ))}
+            })
+            }
           </Select>
         </Grid>
-
+        
         <Grid item xs={4}>
           <InputLabel className="margin-b-0">Serviço adicional de</InputLabel>
           <Select
+            disabled={!isFranchiseer(business.data)}
             variant="outlined"
             fullWidth
             onChange={(e) => setState({ ...state, ancestry: e.target.value })}
             className="margin-b-0"
           >
             <MenuItem value="">Nenhum</MenuItem>
-            {services.map((item, i) => (
+            {additionalServices && additionalServices.map((item, i) => (
               <MenuItem key={i} value={item.id}>
                 {item.name}
               </MenuItem>
@@ -193,7 +207,7 @@ export default function Form({ newService, services, categories }) {
         spacing={3}
         className="margin-b-0"
       >
-
+        
         <Grid item xs={4}>
           <InputLabel className="margin-b-0">Preço</InputLabel>
           <TextField

@@ -3,8 +3,9 @@ import { toast } from "react-toastify";
 import api from "../../services/api";
 import ServiceActions from "../reducers/service";
 import ServiceCategoryActions from "../reducers/serviceCategory";
-import ServicePriceRuleActions from "../reducers/servicePriceRule";
 import EmploymentActions from "../reducers/employment";
+import BusinessServiceActions from "../reducers/businessService";
+import { getBusinessServiceByBusiness } from '../../helpers/business_services'
 
 export function* index({ data }) {
   const response = yield call(api.services, data);
@@ -27,18 +28,10 @@ export function* search({ data }) {
 export function* create({ data }) {
   const response = yield call(api.createService, data);
   if (response.ok) {
-    toast.success("Serviço criado com sucesso!");
-    yield put(ServiceActions.setStep(0));
-    yield put(ServiceCategoryActions.serviceCategoriesRequest());
     yield put(ServiceActions.createServiceSuccess(response.data));
-    
     const service = response.data.data
-
-    yield all(
-      data.rules.map((item) =>
-        put(ServicePriceRuleActions.createPricesRequest({ ...item, service }))
-      )
-    );
+    
+    yield put(BusinessServiceActions.createBusinessServiceRequest({ ...service, ...data, id: service.id }));
   } else {
     toast.error(
       "Ops, ocorreu um erro ao criar seu serviço, por favor, tente novamente"
@@ -54,7 +47,10 @@ export function* update({ data }) {
     yield put(ServiceActions.setStep(0));
     yield put(ServiceActions.updateServiceSuccess(response.data));
     const service = response.data.data
-
+    
+    const businessService = getBusinessServiceByBusiness(service.business_services)
+  
+    yield put(BusinessServiceActions.updateBusinessServiceRequest({ ...service, ...data, service, id: businessService.id}))
     yield put(ServiceCategoryActions.serviceCategoriesRequest());
   } else {
     toast.error(

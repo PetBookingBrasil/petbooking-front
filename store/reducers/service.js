@@ -109,10 +109,11 @@ export const createServiceFailure = (state, { data }) =>
     draft.saving = false;
   });
 
-export const updateServiceRequest = (state, { data }) =>
-  produce(state, (draft) => {
+export const updateServiceRequest = (state, { data }) => {
+  return produce(state, (draft) => {
     draft.saving = true;
   });
+}
 
 export const updateServiceSuccess = (state, { data }) =>
   produce(state, (draft) => {

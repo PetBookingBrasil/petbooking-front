@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import EmploymentActions from "../../store/reducers/employment";
 import ServiceCategoryActions from "../../store/reducers/serviceCategory";
 import ServiceActions from "../../store/reducers/service";
+import BusinessActions from "../../store/reducers/business";
 
 import Divider from "@material-ui/core/Divider";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -29,12 +30,13 @@ import Container from "../../components/container";
 
 export default function ServicesPage() {
   const dispatch = useDispatch();
-  const { employment, service, serviceCategory, businessService } = useSelector(
-    ({ employment, service, serviceCategory, businessService }) => ({
+  const { employment, service, serviceCategory, businessService, business } = useSelector(
+    ({ employment, service, serviceCategory, businessService, business }) => ({
       employment,
       serviceCategory,
       service,
-      businessService
+      businessService,
+      business
     })
   );
 
@@ -57,6 +59,8 @@ export default function ServicesPage() {
     dispatch(ServiceActions.servicesRequest());
     dispatch(ServiceActions.petKindsRequest());
     dispatch(EmploymentActions.employmentsRequest());
+    dispatch(BusinessActions.getBusinessRequest());
+    
     return () => {
       document.removeEventListener("scroll", trackScrolling);
     };
@@ -189,6 +193,7 @@ export default function ServicesPage() {
       {service.step === 1 && (
         <ServiceInput
           categories={serviceCategory.data}
+          business={business.data}
           setCategory={(e) => {
             setData({
               ...data,

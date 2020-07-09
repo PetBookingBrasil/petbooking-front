@@ -2,7 +2,7 @@ import { takeLatest, call, put, all, select } from "redux-saga/effects";
 import { toast } from "react-toastify";
 import api from "../../services/api";
 import ServiceActions from "../reducers/service";
-import ServiceCategoryActions from "../reducers/serviceCategory";
+import ServiceCategoryActions, { ServiceCategorySelectors } from '../reducers/serviceCategory'
 import ServicePriceRuleActions from "../reducers/servicePriceRule";
 import BusinessServiceActions from "../reducers/businessService";
 
