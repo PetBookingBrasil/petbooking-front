@@ -5,6 +5,7 @@ import BusinessServiceActions from '../../../store/reducers/businessService'
 import ServiceActions from '../../../store/reducers/service'
 import FormHelperText from '@material-ui/core/FormHelperText';
 import { getBusinessServiceByBusiness } from '../../../helpers/business_services'
+import CurrencyInput, { formatterCurrency } from '../../../helpers/currencyInput'
 
 import { toast } from 'react-toastify'
 
@@ -49,8 +50,8 @@ export default function Form({ newService, services, categories }) {
     description: newService.description,
     category: newService.service_category_id,
     ancestry: newService.ancestry,
-    cost: !!newService.cost ? newService.cost : businessService.cost || 0,
-    price: businessService ? businessService.price : !!newService.price && newService.price || 0,
+    cost: !!newService.cost ? formatterCurrency(newService.cost) : formatterCurrency(businessService.cost) || 0,
+    price: businessService ? formatterCurrency(businessService.price) : !!newService.price && formatterCurrency(newService.price) || 0,
     duration: businessService.duration || newService.duration
       ? newService.duration
       : '00:00',
@@ -215,7 +216,7 @@ export default function Form({ newService, services, categories }) {
             variant="outlined"
             value={state.price}
             InputProps={{
-              inputComponent: MoneyMask,
+              inputComponent: CurrencyInput
             }}
             onChange={(e) => setState({ ...state, price: e.target.value })}
           />
@@ -241,7 +242,7 @@ export default function Form({ newService, services, categories }) {
             variant="outlined"
             value={state.cost}
             InputProps={{
-              inputComponent: MoneyMask,
+              inputComponent: CurrencyInput,
             }}
             onChange={(e) => setState({ ...state, cost: e.target.value })}
           />

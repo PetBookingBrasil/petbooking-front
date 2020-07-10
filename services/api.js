@@ -1,5 +1,6 @@
 import apisauce from 'apisauce'
 import { getPriceByService } from '../helpers/business_service_prices'
+import { removeMask } from '../helpers/currencyInput'
 
 export const getToken = () => localStorage.getItem('@pb/token')
 export const getBusinessId = () => localStorage.getItem('@pb/businessId')
@@ -73,14 +74,8 @@ const createService = (params) => {
     service_category_id: params.category,
     description: params.description,
     ancestry: params.ancestry,
-    price:
-      typeof params.price === 'number'
-        ? params.price
-        : params.price.replace('R$', ''),
-    cost:
-      typeof params.cost === 'number'
-        ? params.cost
-        : params.cost.replace('R$', ''),
+    price: removeMask(params.price),
+    cost: removeMask(params.cost),
     iss_type: params.issType,
     duration: params.duration,
     municipal_code: params.municipalCode,
@@ -99,14 +94,8 @@ const createBusinessService = (params) => {
       application: 'petbooking',
       business_id: getBusinessId(),
       service_id: params.id,
-      price:
-        typeof params.price === 'number'
-          ? params.price
-          : params.price.replace('R$', ''),
-      cost:
-        typeof params.cost === 'number'
-          ? params.cost
-          : params.cost.replace('R$', ''),
+      price: removeMask(params.price),
+      cost: removeMask(params.cost),
       duration: params.duration,
     },
   })
@@ -116,14 +105,8 @@ const updateBusinessService = (params) => {
   return api.put('api/v3/business_services', {
     id: params.id,
     business_service: {
-      price:
-        typeof params.price === 'number'
-          ? params.price
-          : params.price.replace('R$', ''),
-      cost:
-        typeof params.cost === 'number'
-          ? params.cost
-          : params.cost.replace('R$', ''),
+      price: removeMask(params.price),
+      cost: removeMask(params.cost),
       duration: params.duration,
     },
   })
@@ -139,14 +122,8 @@ const updateService = (params) => {
       service_category_id: params.category,
       description: params.description,
       ancestry: params.ancestry,
-      price:
-        typeof params.price === 'number'
-          ? params.price
-          : params.price.replace('R$', ''),
-      cost:
-        typeof params.cost === 'number'
-          ? params.cost
-          : params.cost.replace('R$', ''),
+      price: removeMask(params.price),
+      cost: removeMask(params.cost),
       iss_type: params.issType,
       duration: params.duration,
       municipal_code: params.municipalCode,
@@ -246,10 +223,7 @@ const breeds = (kind) =>
 const updatePrices = (rule) => {
   const prices = rule.combinations.data.map((item) => ({
     id: (getPriceByService(item.business_service_prices, rule.service) || {}).id,
-    price:
-      typeof item.price === 'number'
-        ? item.price
-        : item.price.replace('R$', ''),
+    price: removeMask(item.price),
   }))
   
   return api.put('api/v3/business_service_prices', {
@@ -261,10 +235,7 @@ const createPrices = (rule) => {
   const prices = rule.combinations.data.map((item) => ({
     service_price_combination_id: item.id,
     business_service_id: rule.business_service.id,
-    price:
-      typeof item.price === 'number'
-        ? item.price
-        : (item.price && item.price.replace('R$', '')) || 0,
+    price: removeMask(item.price),
   }))
   
   return api.post('api/v3/business_service_prices', {

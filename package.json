@@ -20,6 +20,7 @@
     "next-redux-wrapper": "^6.0.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
+    "react-number-format": "^4.4.1",
     "react-redux": "^7.2.0",
     "react-text-mask": "^5.4.3",
     "react-toastify": "^6.0.5",
