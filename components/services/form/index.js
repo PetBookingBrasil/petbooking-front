@@ -266,20 +266,19 @@ export default function Form({ newService, services, categories }) {
       
       {formattedRules.map((item, i) => {
         return (
-          <Grid container className="margin-b-4" key={i}>
+          <Grid container className="margin-b-4" key={i} onClick={() =>
+            setState({
+              ...state,
+              rulesOpen: state.rulesOpen.map((inner, j) =>
+                i === j ? !inner : inner
+              ),
+            })
+          }>
             <CollapseTitle container justify="space-between" alignItems="center">
               <Typography variant="body2">
                 Variação de preço: {item.name}
               </Typography>
               <IconButton
-                onClick={() =>
-                  setState({
-                    ...state,
-                    rulesOpen: state.rulesOpen.map((inner, j) =>
-                      i === j ? !inner : inner
-                    ),
-                  })
-                }
               >
                 {!!state.rulesOpen[i] ? <ExpandLess/> : <ExpandMore/>}
               </IconButton>
@@ -437,13 +436,11 @@ export default function Form({ newService, services, categories }) {
       })}
       
       <Grid container className="margin-b-4">
-        <CollapseTitle container justify="space-between" alignItems="center">
+        <CollapseTitle onClick={() =>
+          setState({ ...state, fiscalOpen: !state.fiscalOpen })
+        } container justify="space-between" alignItems="center">
           <Typography variant="body2">Configurações fiscais</Typography>
-          <IconButton
-            onClick={() =>
-              setState({ ...state, fiscalOpen: !state.fiscalOpen })
-            }
-          >
+          <IconButton>
             {!!state.fiscalOpen ? <ExpandLess/> : <ExpandMore/>}
           </IconButton>
         </CollapseTitle>
