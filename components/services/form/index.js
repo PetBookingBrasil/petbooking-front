@@ -105,7 +105,7 @@ export default function Form({ newService, services, categories }) {
           yLabels: item.service_price_variations[1].variations,
           data: item.service_price_combinations.map((inner) => ({
             ...inner,
-            price: state.id === undefined ? 0 : (getPriceByService(inner.business_service_prices, state) || {}).price
+            price: state.id === undefined ? 0 : formatterCurrency((getPriceByService(inner.business_service_prices, state) || {}).price)
           })),
         },
       }))
@@ -392,6 +392,9 @@ export default function Form({ newService, services, categories }) {
                     {item.combinations.data.map((inner, j) => {
                       return (<Grid item xs={parseInt(12 / item.combinations.rows)}>
                         <TextField
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
                           value={inner.price}
                           variant="outlined"
                           label={inner.name}
@@ -420,7 +423,7 @@ export default function Form({ newService, services, categories }) {
                             )
                           }
                           InputProps={{
-                            inputComponent: MoneyMask,
+                            inputComponent: CurrencyInput
                           }}
                         />
                       </Grid>)

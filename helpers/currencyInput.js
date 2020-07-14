@@ -21,7 +21,7 @@ export const formatterCurrency = (value, symbol) => {
   }).format(value)
   
   if(!symbol) {
-    price = price.replace('R$', '')
+    price = price.replace('R$', '').replace(',', '.')
   }
   
   return `${price}`
