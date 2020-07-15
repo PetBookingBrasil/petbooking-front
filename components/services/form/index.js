@@ -45,8 +45,8 @@ export default function Form({ newService, services, categories }) {
   const businessServiceFromService = getBusinessServiceByBusiness(BusinessServices)
   businessService = businessServiceFromService || businessService.data
   
-  const duration = () => {
-    if (businessService.duration !== 'zero') {
+  const duration = (businessService) => {
+    if (businessService.length > 0 && businessService.duration !== 'zero') {
       return businessService.duration_mask;
     }
   
@@ -63,9 +63,9 @@ export default function Form({ newService, services, categories }) {
     description: newService.description,
     category: newService.service_category_id,
     ancestry: newService.ancestry,
-    cost: !!newService.cost ? formatterCurrency(newService.cost) : formatterCurrency(businessService.cost) || 0,
-    price: businessService ? formatterCurrency(businessService.price) : !!newService.price && formatterCurrency(newService.price) || 0,
-    duration: duration(),
+    cost: businessService && formatterCurrency(businessService.cost) || 0,
+    price: businessService && formatterCurrency(businessService.price) || !!newService.price && formatterCurrency(newService.price) || 0,
+    duration: duration(businessService),
     aliquot: !!newService.aliquot ? newService.aliquot : '',
     issType: !!newService.iss_type ? newService.iss_type : '2',
     municipalCode: !!newService.municipal_code ? newService.municipal_code : '',
@@ -226,6 +226,7 @@ export default function Form({ newService, services, categories }) {
             fullWidth
             variant="outlined"
             value={state.price}
+            placeholder={"R$ 00.00"}
             InputProps={{
               inputComponent: CurrencyInput
             }}
@@ -252,6 +253,7 @@ export default function Form({ newService, services, categories }) {
             fullWidth
             variant="outlined"
             value={state.cost}
+            placeholder={"R$ 00.00"}
             InputProps={{
               inputComponent: CurrencyInput,
             }}

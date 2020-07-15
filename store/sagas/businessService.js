@@ -32,14 +32,23 @@ export function* create({ data }) {
 export function* update({ data }) {
   const response = yield call(api.updateBusinessService, data);
   if (response.ok) {
-    toast.success("Serviço criado com sucesso!");
     yield put(ServiceActions.setStep(0));
     yield put(ServiceCategoryActions.serviceCategoriesRequest());
     yield put(BusinessServiceActions.updateBusinessServiceSuccess(response.data));
+    const business_service = response.data.data
+    
     yield all(
-      data.rules.map((item) =>
-        put(ServicePriceRuleActions.updatePricesRequest({ ...item, service: data.service }))
-      )
+      data.rules.map((item) => {
+        let hasBusinessServicePrices = item.combinations.data.filter(d => {
+          return d.business_service_prices.some(bsp => bsp.service_id == data.service.id);
+        });
+  
+        if (hasBusinessServicePrices.length > 0) {
+          return put(ServicePriceRuleActions.updatePricesRequest({ ...item, service: data.service }))
+        } else {
+          return put(ServicePriceRuleActions.createPricesRequest({ ...item, business_service }))
+        }
+      })
     );
   } else {
     toast.error(
