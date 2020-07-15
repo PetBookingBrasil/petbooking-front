@@ -14,10 +14,13 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
+import CurrencyInput from '../../../helpers/currencyInput'
+import DurationInput from '../../../helpers/durationInput'
+import PercentageInput from '../../../helpers/percentageInput'
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 import ServiceCategoryItem from "../categoryItem";
 import CustomDialog from "../customDialog";
-import { DurationMask, MoneyMask } from "../../../helpers/masks";
 
 export default function Categories({
   data,
@@ -38,7 +41,7 @@ export default function Categories({
     serviceId: "",
     price: "",
     comission: "",
-    duration: "01:00",
+    duration: "",
     petKind: initialPetKind,
   });
   const petKindsTranslation = {
@@ -121,7 +124,7 @@ export default function Categories({
               ? employment.skills.find((sk) => sk.service_id === inner.id)
               : { pet_kinds: [] };
             const petKind = initialPetKind;
-            currentSkill.pet_kinds.map((pk) => {
+            currentSkill.pet_kinds && currentSkill.pet_kinds.map((pk) => {
               petKind[pk.name] = true;
             });
 
@@ -193,7 +196,7 @@ export default function Categories({
             value={state.price}
             fullWidth
             InputProps={{
-              inputComponent: MoneyMask,
+              inputComponent: CurrencyInput,
             }}
             onChange={(e) => setState({ ...state, price: e.target.value })}
             className="margin-b-0"
@@ -208,7 +211,7 @@ export default function Categories({
             onChange={(e) => setState({ ...state, duration: e.target.value })}
             className="margin-b-0"
             InputProps={{
-              inputComponent: DurationMask,
+              inputComponent: DurationInput,
             }}
           />
 
@@ -216,11 +219,14 @@ export default function Categories({
           <TextField
             variant="outlined"
             placeholder="% de comissão"
-            type="number"
             value={state.comission}
             fullWidth
-            onChange={(e) => setState({ ...state, comission: e.target.value })}
             className="margin-b-0"
+            InputProps={{
+              inputComponent: PercentageInput,
+              endAdornment: <InputAdornment position="end">%</InputAdornment>,
+            }}
+            onChange={(e) => setState({ ...state, comission: e.target.value })}
           />
 
           <FormGroup>

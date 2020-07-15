@@ -6,6 +6,7 @@ import ServiceActions from '../../../store/reducers/service'
 import FormHelperText from '@material-ui/core/FormHelperText';
 import { getBusinessServiceByBusiness } from '../../../helpers/business_services'
 import CurrencyInput, { formatterCurrency } from '../../../helpers/currencyInput'
+import DurationInput from '../../../helpers/durationInput'
 
 import { toast } from 'react-toastify'
 
@@ -44,6 +45,18 @@ export default function Form({ newService, services, categories }) {
   const businessServiceFromService = getBusinessServiceByBusiness(BusinessServices)
   businessService = businessServiceFromService || businessService.data
   
+  const duration = () => {
+    if (businessService.duration !== 'zero') {
+      return businessService.duration_mask;
+    }
+  
+    if (newService.duration !== 'zero') {
+      return newService.duration_mask;
+    }
+    
+    return '';
+  };
+  
   const [state, setState] = useState({
     id: newService.id,
     name: newService.name,
@@ -52,9 +65,7 @@ export default function Form({ newService, services, categories }) {
     ancestry: newService.ancestry,
     cost: !!newService.cost ? formatterCurrency(newService.cost) : formatterCurrency(businessService.cost) || 0,
     price: businessService ? formatterCurrency(businessService.price) : !!newService.price && formatterCurrency(newService.price) || 0,
-    duration: businessService.duration || newService.duration
-      ? newService.duration
-      : '00:00',
+    duration: duration(),
     aliquot: !!newService.aliquot ? newService.aliquot : '',
     issType: !!newService.iss_type ? newService.iss_type : '2',
     municipalCode: !!newService.municipal_code ? newService.municipal_code : '',
@@ -229,7 +240,7 @@ export default function Form({ newService, services, categories }) {
             variant="outlined"
             value={state.duration}
             InputProps={{
-              inputComponent: DurationMask,
+              inputComponent: DurationInput,
             }}
             onChange={(e) => setState({ ...state, duration: e.target.value })}
           />
@@ -266,15 +277,15 @@ export default function Form({ newService, services, categories }) {
       
       {formattedRules.map((item, i) => {
         return (
-          <Grid container className="margin-b-4" key={i} onClick={() =>
-            setState({
-              ...state,
-              rulesOpen: state.rulesOpen.map((inner, j) =>
-                i === j ? !inner : inner
-              ),
-            })
-          }>
-            <CollapseTitle container justify="space-between" alignItems="center">
+          <Grid container className="margin-b-4" key={i}>
+            <CollapseTitle container justify="space-between" alignItems="center"
+                           onClick={() =>
+                             setState({
+                               ...state,
+                               rulesOpen: state.rulesOpen.map((inner, j) =>
+                                 i === j ? !inner : inner
+                               ),
+                             })} >
               <Typography variant="body2">
                 Variação de preço: {item.name}
               </Typography>
@@ -394,6 +405,7 @@ export default function Form({ newService, services, categories }) {
                           InputLabelProps={{
                             shrink: true,
                           }}
+                          placeholder={"R$ 00.00"}
                           value={inner.price}
                           variant="outlined"
                           label={inner.name}

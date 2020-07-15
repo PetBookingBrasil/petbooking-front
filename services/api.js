@@ -147,10 +147,7 @@ const createSkill = (params) => {
     skill: {
       employment_id: params.employment.id,
       service_id: params.serviceId,
-      price:
-        typeof params.price === 'number'
-          ? params.price
-          : params.price.replace('R$', ''),
+      price: removeMask(params.price),
       duration: params.duration,
       comission_percentage: params.comission,
     },

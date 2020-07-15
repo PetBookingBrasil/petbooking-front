@@ -12,17 +12,13 @@ const formatter = value => {
   return `${price}`
 }
 
-export const formatterCurrency = (value, symbol) => {
+export const formatterCurrency = (value) => {
   if (!Number(value)) return ''
   
   let price = new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL'
   }).format(value)
-  
-  if(!symbol) {
-    price = price.replace('R$', '').replace(',', '.')
-  }
   
   return `${price}`
 }
