@@ -26,7 +26,7 @@ import ExpandMore from '@material-ui/icons/ExpandMore'
 
 import { CollapseTitle, CollapseBody } from './styles'
 
-import { DaysMask, MoneyMask, DurationMask } from '../../../helpers/masks'
+import { DaysMask } from '../../../helpers/masks'
 import { getPriceByService } from '../../../helpers/business_service_prices'
 import { isFranchiseer } from '../../../helpers/business'
 
@@ -43,10 +43,12 @@ export default function Form({ newService, services, categories }) {
   
   const { business_services: BusinessServices } = newService
   const businessServiceFromService = getBusinessServiceByBusiness(BusinessServices)
-  businessService = businessServiceFromService || businessService.data
+  businessService = businessService.data.length === 0 ? businessServiceFromService : businessService.data
+  
+  newService = service.current || newService
   
   const duration = (businessService) => {
-    if (businessService.length > 0 && businessService.duration !== 'zero') {
+    if (businessService && businessService.length > 0 && businessService.duration !== 'zero') {
       return businessService.duration_mask;
     }
   

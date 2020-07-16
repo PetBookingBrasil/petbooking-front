@@ -1,10 +1,13 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import UserActions from "../store/reducers/user";
+import ServiceCategoryActions from '../store/reducers/serviceCategory'
 
 export default function Index({ children }) {
   const dispatch = useDispatch();
-
+  
+  dispatch(ServiceCategoryActions.serviceCategoriesRequest());
+  
   useEffect(() => {
     async function getData() {
       const url = window.location.href;

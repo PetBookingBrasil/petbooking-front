@@ -49,8 +49,7 @@ export const serviceCategoriesRequest = (state, { data }) =>
 export const serviceCategoriesSuccess = (state, { data }) =>
   produce(state, (draft) => {
     draft.fetching = false;
-    draft.data =
-      state.meta.page > 1 ? [...state.data, data.data].flat() : data.data;
+    draft.data = data.data
   });
 
 export const serviceCategoriesFailure = (state, { data }) =>
