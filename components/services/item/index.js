@@ -1,17 +1,18 @@
-import React from "react";
+import React from 'react'
 
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import Tooltip from "@material-ui/core/Tooltip";
-import IconButton from "@material-ui/core/IconButton";
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
+import Tooltip from '@material-ui/core/Tooltip'
+import IconButton from '@material-ui/core/IconButton'
 
-import Edit from "@material-ui/icons/Edit";
-import Delete from "@material-ui/icons/Delete";
-import AttachMoney from "@material-ui/icons/AttachMoney";
-import Schedule from "@material-ui/icons/Schedule";
+import Edit from '@material-ui/icons/Edit'
+import Delete from '@material-ui/icons/Delete'
+import AttachMoney from '@material-ui/icons/AttachMoney'
+import Schedule from '@material-ui/icons/Schedule'
 import { getBusinessServiceByBusiness } from '../../../helpers/business_services'
 
-import { Component, SkillBtn, ImageWrapper, Initials } from "./styles";
+import { Component, SkillBtn, ImageWrapper, Initials, Dot } from './styles'
+import { makeStyles } from '@material-ui/core/styles';
 
 export default function ServiceItem({
   data,
@@ -32,26 +33,29 @@ export default function ServiceItem({
   
   let price = businessServiceCurrent && businessServiceCurrent.price || data.price
   
-  price = price ? price.toLocaleString("pt-br", {
-        style: "currency",
-        currency: "BRL",
-      })
-    : "não configurado";
-
+  price = price ? price.toLocaleString('pt-br', {
+      style: 'currency',
+      currency: 'BRL',
+    })
+    : 'não configurado';
+  
   return (
     <Component item md={12}>
       <Grid container spacing={3} alignItems="center">
         <Grid item md={10}>
           <Grid container alignItems="center">
             <Grid item md={6}>
-              {data.name}
+              <div className={useStyles().ContainerDot}>
+                <Dot/>
+                <span className="padding-l-1">{data.name} </span>
+              </div>
             </Grid>
             <Grid item md={2} className="d-flex align-center">
-              <AttachMoney className="margin-r-0" />
+              <AttachMoney className="margin-r-0"/>
               <Typography variant="caption">{price}</Typography>
             </Grid>
             <Grid item md={2} className="d-flex align-center">
-              <Schedule className="margin-r-0" />
+              <Schedule className="margin-r-0"/>
               <Typography variant="caption">{data.duration}</Typography>
             </Grid>
             <Grid item md={2} className="d-flex align-center o-auto">
@@ -63,36 +67,42 @@ export default function ServiceItem({
                 </SkillBtn>
               )}
               {!!data.employments &&
-                !!data.employments.length &&
-                data.employments.map((item) => (
-                  <Tooltip
-                    title={item.name}
-                    key={item.id}
-                    onClick={() => setEmployment(item)}
-                  >
-                    <ImageWrapper className="margin-r-0">
-                      {item.avatar_url.includes("fallback") ? (
-                        <Initials>
-                          <span>{item.initials}</span>
-                        </Initials>
-                      ) : (
-                        <img src={item.avatar_url}></img>
-                      )}
-                    </ImageWrapper>
-                  </Tooltip>
-                ))}
+              !!data.employments.length &&
+              data.employments.map((item) => (
+                <Tooltip
+                  title={item.name}
+                  key={item.id}
+                  onClick={() => setEmployment(item)}
+                >
+                  <ImageWrapper className="margin-r-0">
+                    {item.avatar_url.includes('fallback') ? (
+                      <Initials>
+                        <span>{item.initials}</span>
+                      </Initials>
+                    ) : (
+                      <img src={item.avatar_url}></img>
+                    )}
+                  </ImageWrapper>
+                </Tooltip>
+              ))}
             </Grid>
           </Grid>
         </Grid>
         <Grid item md={2} className="d-flex align-center justify-end">
           <IconButton onClick={() => editItem(data)}>
-            <Edit />
+            <Edit/>
           </IconButton>
           <IconButton onClick={() => removeItem(data)}>
-            <Delete />
+            <Delete/>
           </IconButton>
         </Grid>
       </Grid>
     </Component>
-  );
+  )
 }
+
+const useStyles = makeStyles({
+  ContainerDot: {
+    display: 'flex'
+  }
+});

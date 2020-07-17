@@ -29,6 +29,29 @@ export const SkillBtn = styled.div`
   }
 `;
 
+export const SyncLabel = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: 0.4em;
+  border-radius: 4px;
+  font-size: 0.6em;
+  color: white;
+  font-size: 9px;
+  background-color: rgb(76, 175, 80);
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+export const Dot = styled.div`
+  width: 6px;
+  height: 6px;
+  margin-top: 2px;
+  background-color: rgb(76, 175, 80);
+  border-radius: 3px;
+  margin-top: 2px;
+`;
+
 export const ImageWrapper = styled.div`
   position: relative;
 

@@ -18,9 +18,12 @@ import CurrencyInput from '../../../helpers/currencyInput'
 import DurationInput from '../../../helpers/durationInput'
 import PercentageInput from '../../../helpers/percentageInput'
 import InputAdornment from '@material-ui/core/InputAdornment';
+import { makeStyles } from '@material-ui/core/styles';
 
 import ServiceCategoryItem from "../categoryItem";
 import CustomDialog from "../customDialog";
+import Typography from '@material-ui/core/Typography'
+import { SyncLabel } from '../item/styles'
 
 export default function Categories({
   data,
@@ -88,9 +91,19 @@ export default function Categories({
       dispatch(ServiceActions.createSkillRequest(payload));
     }
   };
-
+  
   return (
     <Grid container className="margin-t-5">
+      <div className={useStyles().synLabel}>
+        {
+          categories[0] &&
+          <SyncLabel>
+            <Typography variant="caption" color="main.success">
+              Sincronizado em {categories[0].date_last_sync}
+            </Typography>
+          </SyncLabel>
+        }
+      </div>
       {!!employment.id && (
         <Grid container justify="center">
           <Button
@@ -282,3 +295,12 @@ export default function Categories({
     </Grid>
   );
 }
+
+const useStyles = makeStyles({
+  synLabel: {
+    float: 'right',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'flex-end'
+  }
+});
