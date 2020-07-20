@@ -16,6 +16,8 @@ export default function Input({ categories, setCategory, business}) {
     })
   )
   
+  const isBusinessSync = categories[0].date_last_sync.length > 0
+  
   const onChangeHandler = (e, item) => {
     const value = e.target.value
     setTimeout(function () {
@@ -44,7 +46,8 @@ export default function Input({ categories, setCategory, business}) {
         filterOptions={(options, params) => {
           const filtered = filter(options, params);
           
-          if (isFranchiseer(business) && filtered.length === 0 && service.action_type === 'SEARCH_SERVICES_REQUEST') {
+          if (isFranchiseer(business) &&
+            filtered.length === 0 && service.action_type === 'SEARCH_SERVICES_REQUEST' && !isBusinessSync) {
             filtered.push({ name: params.inputValue, title: `Criar ${params.inputValue}` });
           }
   
